@@ -1,0 +1,120 @@
+---
+title             : 
+shorttitle        : Draft
+
+author: 
+  - name          : "blank"
+    affiliation   : ""
+    corresponding : yes    # Define only one corresponding author
+    address       : "-"
+    email         : "-"
+
+
+affiliation:
+  - id            : ""
+    institution   : ""
+
+
+authornote: 
+
+abstract: 
+  
+keywords          : ~
+wordcount         : ~
+
+bibliography      : [library.bib]
+
+
+floatsintext      : yes
+figurelist        : yes
+tablelist         : yes
+footnotelist      : no
+linenumbers       : no
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output:
+  papaja::apa6_pdf: default
+  #papaja::apa6_docx: default
+  
+header-includes:
+   - \raggedbottom
+   - \usepackage{setspace}
+   - \AtBeginEnvironment{tabular}{\onehalfspacing}
+   - \AtBeginEnvironment{lltable}{\onehalfspacing}
+   - \captionsetup[table]{font={stretch=1}}
+   - \captionsetup[figure]{font={stretch=1}}
+   - \setlength{\skip\footins}{1cm}
+   - \setlength{\footnotesep}{0.5cm}
+   - \shorttitle{}
+   - \usepackage{float}
+---
+
+# Introduction
+
+Despite the numerous physical, mental and social benefits of participating in sport at all levels, one of the more negative and arguably inevitable consequences that can have wide-ranging effects, is injury. 
+Not only are there significant financial (e.g., costs of surgery and rehabilitation), psychological (e.g., increased negative affect, lower self-esteem, and higher levels of depression and anxiety) and physiological (e.g., acute pain from an injury and long term physical damage) consequences for an athlete [@Johnston2000; @Reiner2013; @Mather2013]. 
+There are also wider economic impacts of injury, with costs associated with accident and emergency, after care and rehabilitation, and days lost in work amounting to tens of millions of pounds each year [@Cumps2008a; @Ozturk2013; @Ryan2019].
+Perhaps not surprisingly, therefore, there is a considerable body of research that has focused on identifying different factors that are related to injury occurrence and the injury process, in an effort to mitigate against its prevalence and the adverse effects associated with it.
+
+Typically, research in the sports sciences has addressed the injury problem from a somewhat narrow perspective, with the sub-disciplines of psychology, physiology and biomechanics focusing on factors specific to their respective fields. 
+Often, however, these disciplines have shown little regard for how different factors across disciplines may interact to exacerbate the risk of injury. 
+While the mono-disciplinary approach was arguably necessary in the early stages of sports injury research, to advance our understanding, there is a need to address the problem from a more holistic perspective in order to identify potential interactions between factors that permeate across disciplines. 
+One factor with strong links to injury from several perspectives is stress. 
+@Fletcher2010 conceptualised stress as a complex multifaceted phenomenon that incorporates both stressors (e.g., environmental demands encountered by an individual) and strain (e.g., an individual's negative psychological, physical and behavioural responses to stressors). 
+Indeed, stress plays an integral role in sport, and is necessary to cause the adaptations athletes need to improve their performance. 
+However, although stress plays an important role in the process of adaptation that athletes need to improve performance, excessive levels of both physiological stress caused by high training volume with inadequate recovery, and psychological duress caused by major life events, have been found to increase the risk of injury [@Post2017; @Galambos2005].
+
+In an attempt to explain the role of stress in injury occurrence, and address the growing injury problem, @Andersen1988 proposed a model of stress and athletic injury. 
+Revised by Williams and Andersen (1998), the model remains one of the most widely cited sport injury models in the sport psychology literature. 
+To elaborate, the model includes several psychological factors (e.g., personality characteristics, major life events and coping resources) that are thought to influence an athlete's response to a stressful situation, with certain combinations of factors more likely to increase the risk of athletic injury.
+However, the model has recently been criticised for focusing only on the cognitive factors that are related to injury, and not including other non-psychological variables that research has demonstrated are also important for the stress-injury relationship [@Ivarsson2017].
+In addition, @Appaneal2014 provided an independent extension to the @Williams2017 model, outlining how additional training-related stress would synergistically interact with psychological stress to increase the risk of injury,
+however the proposed mechanisms in @Appaneal2014 have yet to be examined.
+Further, there have also been calls to move away from the mono-disciplinary approach of identifying isolated risk factors that contribute to injury occurrence that has been typical within the sub disciplines of sport and exercise sciences [@Bittencourt2016].
+Indeed, there is a growing recognition that the body and mind are inextricably linked, and that a more holistic approach needs to be taken to examining factors associated with injury. 
+As such, in order to advance our understanding of the complex interactions between different sources of stress and their effect on injury occurrence, there is a clear need to address the stress-injury relationship from an interdisciplinary perspective
+
+## Purpose of the thesis
+
+The central purpose of the thesis was to explore the multifaceted nature of different stress-related risk factors associated with injury occurrence from an interdisciplinary perspective. Specifically, the thesis aimed to:
+(a) identify and evaluate the relationship between psychological and physiological markers of stress in the prediction of injury occurrence; 
+(b) examine the relationship between the markers of stress and injury in a prospective, repeated measures study with a large cohort of athletes; and 
+(c) evaluate the relationship between the markers of stress and injury using an analysis method that captures the complex nature of injury occurrence.
+
+## Structure of the thesis
+
+The thesis comprises six chapters and contains two empirical studies. 
+Following this introduction, Chapter 2 provides a literature review of the current empirical research. 
+The thesis comprises six chapters and contains two empirical studies. Following this introduction, Chapter 2 provides a literature review of the current empirical research. Specifically, this chapter aimed to describe and critically evaluate Williams and Andersen’s (1998) model of stress and injury and the associated literature; discuss recent theories and frameworks that build upon the limitations of Williams and Andersen’s (1998) model to address the stress-injury relationship from an interdisciplinary perspective; and explain the rationale that underpins the current programme of research
+
+Chapter 3 provides a rationale for the inclusion of the specific measures and variables that were used in the present programme of research. 
+The reliability and validity of specific markers were evaluated using the relevant research literature, and where appropriate, pilot studies conducted to address specific concerns regarding the choice of a measure. 
+In particular, the chosen measures had to be both robust and reliable within a field-based data collection, in addition to being feasible to use within the time-frame that was available to collect data from a large number of participants across repeated time-points. The reason for these criteria were twofold: firstly, to safeguard the quality of the data collected during the study, and secondly, to develop a collection protocol that was feasible for both the research and participant. 
+As a result of the pilot studies and literature review, several modifications were made to the chosen measures to improve their reliability and validity within the prospective repeated measures design of the current programme of research.
+
+Chapter 4 reports a study (Study 1) designed to capture markers of stress using the measures outlined in Chapter 3 in a large cohort of athletes in a prospective, repeated measures study. 
+A total of 351 healthy athletes were recruited and completed a battery of measures at approximately 4-monthly intervals over a 12-month period. 
+At each data collection point, athletes completed the set of measures identified in Chapter 3 to assess major life events, the reinforcement sensitivity theory of personality, muscle stiffness, heart rate variability and postural stability, in addition to reporting any injuries they had sustained since the last data collection. 
+Two Bayesian networks were used to examine the relationships between variables and model the changes between data collection points in the study. 
+Findings revealed muscle stiffness to have the strongest relationship with injury occurrence, with high levels of stiffness increasing the probability of sustaining an injury. 
+In contrast, negative life events (NLE) did not increase the probability of injury occurrence. In contrast, when examining changes between time points, increases in NLE between time points was found to increase the probability of injury, and the combination of increases in NLE and muscle stiffness resulted in the greatest probability of sustaining an injury. 
+Findings from the study demonstrated the importance of both a repeated measures design and interdisciplinary perspective in furthering our understanding of the relationship between stress-related markers and injury occurrence.
+
+The study detailed in Chapter 5 provides a more fine-grained examination of stress related factors and injury and addresses additional questions that arose from Study 1. 
+Specifically, 
+(a) whether the stress hormone cortisol was also associated with major life events and injury; 
+(b) whether an alternative method of scoring the major life events would be related to injury; and 
+(c) how these measures related to both injury occurrence _and_ severity.
+A sub-group of male football and rugby players (\emph{n} = 51) were chosen due to the nature of the high intensity training they completed on a regular basis. 
+In addition to the measures outlined in Study 1, participants also provided a sample of saliva before and after high intensity training sessions, which was used to determine the changes in concentration of cortisol. 
+The NLE scoring was modified from the original procedure of using the sum of the negative life events by dividing each participant's score by the number of events they reported, to reflect an average NLE score.
+A combination of Bayesian hurdle regression and Bayesian linear regression models were used to explore the relationship between average NLE, muscle stiffness, cortisol and both injury occurrence and severity.
+Findings revealed high levels of both average NLE and muscle stiffness increased the probability of injury occurrence and increased injury severity; however the estimates had large credible intervals implying uncertainty regarding the observed relationships. 
+The relationship between cortisol and injury was less clear, with each team demonstrating a different response.
+
+The final Chapter (6) draws together the major findings presented in the thesis; discusses the major conceptual and measurement issues in the thesis; highlights the practical implications for athletes, coaches, practitioners and researchers; outlines the programme's strengths and limitations; and provides directions for future research.
+
+

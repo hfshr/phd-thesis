@@ -18,7 +18,7 @@ allsaliva <- map2_df(sheets,
   select(-text)
 
 ### extract tubeids from main file
-d1 <- read_excel("~/Downloads/CSS-MG-001.xlsx",
+d1 <- read_excel("data/cortisol/CSS-MG-001.xlsx",
                  col_names = TRUE )
 
 d1 <- d1 %>% select(-c(2,6:7,11:17))
@@ -88,9 +88,9 @@ interassay <- allsaliva %>%
 
 
 intraassay <- fulllist %>% 
-  select(id, num, well.od) %>% 
+  select(id, num, well.od)%>% 
   separate(well.od, c("one", "two"), sep = ",") %>% 
-  mutate_at(vars(one, two) , list(~as.numeric)) %>% 
+  mutate_at(vars(one, two) , list(~as.numeric(.))) %>% 
   rowwise() %>% 
   mutate(mean = mean(c(one,two)),
          sd = sd(c(one,two)),

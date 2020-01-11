@@ -1,34 +1,47 @@
-
-
-\documentclass[man,floatsintext]{apa6}
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  english,
+  man,floatsintext]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{hyperref}
-\hypersetup{unicode=true,
-            pdfkeywords={\textasciitilde{}},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdflang={en-EN},
+  pdfkeywords={\textasciitilde{}},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -78,57 +91,71 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
-
-
-  \title{}
-    \author{\textsuperscript{}}
-    \date{}
-  
-\shorttitle{}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{} }
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Manuscript styling
 \usepackage{csquotes}
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
 
+% Table formatting
 \usepackage{longtable}
 \usepackage{lscape}
-\usepackage{multirow}
-\usepackage{tabularx}
-\usepackage[flushleft]{threeparttable}
-\usepackage{threeparttablex}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
 \newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
 
+% Enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
 \makeatletter
 \newcommand\LastLTentrywidth{1em}
 \newlength\longtablewidth
 \setlength{\longtablewidth}{1in}
 \newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
+
+% \setlength{\parindent}{0.5in}
+% \setlength{\parskip}{0pt plus 0pt minus 0pt}
+
+% Overwrite redefinition of paragraph and subparagraph by the default LaTeX template
+% See https://github.com/crsh/papaja/issues/292
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\parindent}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\itshape\typesectitle}}
+
+\renewcommand{\subparagraph}[1]{\@startsection{subparagraph}{5}{1em}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-\z@\relax}%
+  {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
+\makeatother
+
+% \usepackage{etoolbox}
+\makeatletter
+\patchcmd{\HyOrg@maketitle}
+  {\section{\normalfont\normalsize\abstractname}}
+  {\section*{\normalfont\normalsize\abstractname}}
+  {}{\typeout{Failed to patch abstract.}}
+\makeatother
+\shorttitle{}
+\author{\textsuperscript{}}
+\affiliation{
+\vspace{0.5cm}
+ }
 \usepackage[none]{hyphenat}
 \raggedbottom
 \usepackage{setspace}
@@ -147,6 +174,16 @@
 \usepackage[toc,page,header]{appendix}
 \usepackage{siunitx}
 \usepackage{enumitem}
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{english}
+\else
+  \usepackage[shorthands=off,main=english]{babel}
+\fi
+
+
+\date{}
 
 \begin{document}
 
@@ -245,7 +282,7 @@ Finally, I'd like to thank all the staff and fellow Ph.D.~candidates at the Card
 
 \begin{flushleft}
 {\setstretch{1.0}
-\listoftables
+
 }
 \end{flushleft}
 
@@ -253,7 +290,7 @@ Finally, I'd like to thank all the staff and fellow Ph.D.~candidates at the Card
 
 \begin{flushleft}
 {\setstretch{1.0}
-\listoffigures
+
 }
 \end{flushleft}
 
@@ -305,16 +342,16 @@ Typically, research in the sports sciences has addressed the injury problem from
 Often, however, these disciplines have shown little regard for how different factors across disciplines may interact to exacerbate the risk of injury.
 While the mono-disciplinary approach was arguably necessary in the early stages of sports injury research, to advance our understanding, there is a need to address the problem from a more holistic perspective in order to identify potential interactions between factors that permeate across disciplines.
 One factor with strong links to injury from several perspectives is stress.
-Fletcher and Scott (2010) conceptualised stress as a complex multifaceted phenomenon that incorporates both stressors (e.g., environmental demands encountered by an individual) and strain (e.g., an individual's negative psychological, physical and behavioural responses to stressors).
+Fletcher \& Scott (2010) conceptualised stress as a complex multifaceted phenomenon that incorporates both stressors (e.g., environmental demands encountered by an individual) and strain (e.g., an individual's negative psychological, physical and behavioural responses to stressors).
 Indeed, stress plays an integral role in sport, and is necessary to cause the adaptations athletes need to improve their performance.
 However, although stress plays an important role in the process of adaptation that athletes need to improve performance, excessive levels of both physiological stress caused by high training volume with inadequate recovery, and psychological duress caused by major life events, have been found to increase the risk of injury (Galambos, Terry, Moyle, \& Locke, 2005; Post et al., 2017).
 
-In an attempt to explain the role of stress in injury occurrence, and address the growing injury problem, Andersen and Williams (1988) proposed a model of stress and athletic injury.
+In an attempt to explain the role of stress in injury occurrence, and address the growing injury problem, Andersen \& Williams (1988) proposed a model of stress and athletic injury.
 Revised by Williams and Andersen (1998), the model remains one of the most widely cited sport injury models in the sport psychology literature.
 To elaborate, the model includes several psychological factors (e.g., personality characteristics, major life events and coping resources) that are thought to influence an athlete's response to a stressful situation, with certain combinations of factors more likely to increase the risk of athletic injury.
 However, the model has recently been criticised for focusing only on the cognitive factors that are related to injury, and not including other non-psychological variables that research has demonstrated are also important for the stress-injury relationship (Ivarsson et al., 2017).
-In addition, Appaneal and Perna (2014) provided an independent extension to the S. Williams et al. (2017) model, outlining how additional training-related stress would synergistically interact with psychological stress to increase the risk of injury,
-however the proposed mechanisms in Appaneal and Perna (2014) have yet to be examined.
+In addition, Appaneal \& Perna (2014) provided an independent extension to the S. Williams et al. (2017) model, outlining how additional training-related stress would synergistically interact with psychological stress to increase the risk of injury,
+however the proposed mechanisms in Appaneal \& Perna (2014) have yet to be examined.
 Further, there have also been calls to move away from the mono-disciplinary approach of identifying isolated risk factors that contribute to injury occurrence that has been typical within the sub disciplines of sport and exercise sciences (Bittencourt et al., 2016).
 Indeed, there is a growing recognition that the body and mind are inextricably linked, and that a more holistic approach needs to be taken to examining factors associated with injury.
 As such, in order to advance our understanding of the complex interactions between different sources of stress and their effect on injury occurrence, there is a clear need to address the stress-injury relationship from an interdisciplinary perspective
@@ -374,19 +411,19 @@ The final Chapter (6) draws together the major findings presented in the thesis;
 
 Injury remains an unfortunate bi-product of participation in sport and despite efforts to reduce injury rates through the identification and modification of risk factors associated with injury,
 the incidence of sport related injuries remains high (Aman, Forssblad, \& Henriksson-Larsén, 2016; Bueno et al., 2018).
-For example, Sheu, Chen, and Hedegaard (2016) reported an age-adjusted injury rate of 31.1 per 1000 people with individuals between five and 24 years of age the most likely to sustain an injury.
-Rosa et al. (2014) found almost half (49.91\%) of university level athletes sustained at least one injury during their career, and Palmer-Green and Elliott (2014) observed 39\% of the British team at the 2014 Sochi winter Olympics sustained at least one injury.
+For example, Sheu, Chen, \& Hedegaard (2016) reported an age-adjusted injury rate of 31.1 per 1000 people with individuals between five and 24 years of age the most likely to sustain an injury.
+Rosa et al. (2014) found almost half (49.91\%) of university level athletes sustained at least one injury during their career, and Palmer-Green \& Elliott (2014) observed 39\% of the British team at the 2014 Sochi winter Olympics sustained at least one injury.
 The detrimental effects of sustaining an injury for individual include lowered self-esteem, increased depression and an increased risk of sustaining subsequent injuries (Brewer, 2012; Leddy, Lambert, \& Ogles, 1994).
 
 In an attempt to mitigate against the undesirable consequences of injury, Van Mechelen, Hlobil, \& Kemper (1992) proposed a four-step model for the sequence of injury prevention, which described the necessary steps to address the growing injury problem.
 Steps one and two of the model involve identifying the nature of the problem through incidence rates and identifying the factors and mechanisms through which injuries may occur.
 Indeed, a large body of research has identified several risk factors, both internal (e.g.~anatomical, biomechanical, psychological) and external (e.g., equipment, playing surface, playing conditions), which are thought to contribute to injury occurrence (Bahr \& Krosshaug, 2005; Wiese-Bjornstal, 2009).
 Based on these factors, several models of injury causation have been proposed in an attempt to understand the multifaceted nature of injury.
-For example, Bahr and Krosshaug (2005) proposed a model of injury causation that identified how both internal and external factors contribute to an athlete's susceptibility to sustaining an injury.
+For example, Bahr \& Krosshaug (2005) proposed a model of injury causation that identified how both internal and external factors contribute to an athlete's susceptibility to sustaining an injury.
 The model was criticised however, for being too linear and not reflecting the true nature of exposure to risk factors and injury occurrence (Meeuwisse, Tyreman, Hagel, \& Emery, 2007).
 Consequently, Meeuwisse et al. (2007) proposed a dynamic, recursive model of sport injury that improved Bahr and Krosshaug's (2005) model, by including a cyclical element, whereby an athlete could be exposed to risk factors and go through a period of adaptation.
 A recovery phase was also included in the model that linked back to characteristics of the predisposed athlete; demonstrating how an athlete's injury history can contribute to their set of risk factors, and how the injury cycle can start over again following recovery from injury.
-While both Bahr and Krosshaug (2005) and Meeuwisse et al. (2007) provided useful frameworks to inform sport injury research, their use has been limited within the literature.
+While both Bahr \& Krosshaug (2005) and Meeuwisse et al. (2007) provided useful frameworks to inform sport injury research, their use has been limited within the literature.
 In contrast, one of the most influential models in sport injury research over the last three decades has been Williams and Andersen's (1998) model of stress and injury (Figure \ref{fig:wamodel}).
 
 \begin{figure}[H]
@@ -412,18 +449,18 @@ Further, of the psychosocial variables in the model, major life events appears t
 \subsubsection{History of stressors}\label{history-of-stressors}}
 
 Research into the relationship between the history of stressors and injury has largely focused on major life events.
-The early research in life event stress evolved from the work of Holmes and Rahe (1967) who developed the Social Readjustment Rating Scale, which was used to identify and rank the magnitude of life events.
+The early research in life event stress evolved from the work of Holmes \& Rahe (1967) who developed the Social Readjustment Rating Scale, which was used to identify and rank the magnitude of life events.
 The first evidence of a relationship between major life events and sports injury was reported by Holmes (1970),
 who found that 50\% of the athletes that experienced high life stress sustained an injury over the preceding 12 months, compared to 9\% and 25\% of athletes with low and moderate life stress respectively.
 This initial evidence of a relationship between life event stress and injury has been largely supported in subsequent research across a range of different sports (Gunnoe et al., 2001; Ivarsson \& Johnson, 2010; Maddison \& Prapavessis, 2005; Petrie, 1992; Rogers \& Landers, 2005).
 Indeed, in their review of the sport injury literature, Williams and Andersen (2007) reported that of the 40 studies that had examined the relationship between major life events and injury, approximately 85 \% had found some correlation between life event stress and injury (Williams \& Andersen, 2007).
 
-While the early research in life event stress did not differentiate between the type of stress being experienced (i.e., whether the source of the stress was perceived as positive or negative), Sarason, Johnson, and Siegel (1978)
+While the early research in life event stress did not differentiate between the type of stress being experienced (i.e., whether the source of the stress was perceived as positive or negative), Sarason, Johnson, \& Siegel (1978)
 contended that the effects of life events perceived as negative may differ from those events viewed positively.
 Consequently, Sarason et al. (1978)
 developed the Life Experience Survey (LES) which asked participants to indicate whether they perceived each life event as negative or positive, and whether the life event had no effect (score of 0), little effect, (-1 or +1 score depending on whether the event was negative or positive), moderate effect (-2 or +2) or a great effect (-3 or +3).
 Negative, positive and total life events (absolute sum of negative and positive event) could then be determined. As expected, Sarason et al. (1978) found negative life events to have a greater effect on health-related dependent variables compared to positive or total life events.
-Using a modified version of the LES, Passer and Seese (1983) were subsequently able to identify that in a sample of university football players, those who reported high negative life events were at the greatest risk of sustaining an injury.
+Using a modified version of the LES, Passer \& Seese (1983) were subsequently able to identify that in a sample of university football players, those who reported high negative life events were at the greatest risk of sustaining an injury.
 Indeed, in the research that followed, life events with \emph{negative} valance were found to most frequently predict injury occurrence (Andersen \& Williams, 1999; Ivarsson \& Johnson, 2010; Ivarsson et al., 2017; Williams \& Andersen, 2007).
 However, both positive and total life event stress have also been found to be related to injury.
 For example, Petrie (1993) reported that positive life events were the only life event stressor to predict injury.
@@ -448,8 +485,8 @@ For example, both high trait anxiety and high competitive trait anxiety have bee
 Ivarsson and Johnson (2010) reported that somatic trait anxiety (\emph{p} = 0.025), psychic trait anxiety (\emph{p} = 0.044), stress susceptibility (\emph{p} = 0.016), and trait irritability (\emph{p} = 0.023) were significant predictors of injury within a group of male soccer players (\emph{n} = 48).
 A particular strength of this study was the prospective design; however, the use of a single sport and small sample size limit the generalizability of the findings.
 Other personality characteristics identified in Williams and Andersen's (1998) model have received less attention in the literature, and findings are inconclusive with regard to predicting injury occurrence (Junge, 2000).
-For example, Pargman and Lunt (1989) reported that external locus of control was associated with increased injury rate in American football players.
-In contrast, Kolt and Kirkby (1996) found that internal locus of control predicted injury in elite, but not non-elite, gymnasts.
+For example, Pargman \& Lunt (1989) reported that external locus of control was associated with increased injury rate in American football players.
+In contrast, Kolt \& Kirkby (1996) found that internal locus of control predicted injury in elite, but not non-elite, gymnasts.
 In their recent meta review, Ivarsson et al. (2017) found that personality characteristics generally have a limited direct relationship with injury prediction; however, research indicates that the presence of personality characteristics in combination with other factors such as a major life event is likely to increase the risk of injury in athletes (Petrie, 1993).
 
 \hypertarget{coping-resources}{%
@@ -460,7 +497,7 @@ The model predicts that athletes with well-developed psychological coping skills
 As a result, coping resources are proposed to moderate the effect of major life events on sports injury, with high levels of coping resources potentially buffering the effect of negative life events.
 Several studies have supported the proposed relationship between life event stress, coping and injury.
 Several studies have found support for the proposed relationship between life event stress, coping and injury. For example, both Hardy (1992) and Petrie (1993) found social support to have a buffering effect on the relationship between negative life events and injury.
-In contrast, Rider and Hicks (1995) found no significant relationship between coping skills and sports injury (\emph{r} = -0.11).
+In contrast, Rider \& Hicks (1995) found no significant relationship between coping skills and sports injury (\emph{r} = -0.11).
 
 While several of the psychosocial characteristics proposed in Williams and Andersen's (1998) model have received significant attention in the literature, there remains a number of unanswered questions surrounding the contribution of characteristics that have received less consideration (e.g., hardiness, sense of coherence and achievement motivation).
 To elaborate, inconclusive findings for certain personality characteristics suggests these characteristics interact with injury occurrence is likely to be complex, and dependent on a number of other factors associated with the individual athlete (Junge, 2000). For example, a number of physical and/or environmental factors are also likely to influence injury occurrence and may moderate the effects of various psychosocial factors.
@@ -473,12 +510,12 @@ Central to Williams and Andersen's (1998) model is the \enquote{stress response}
 For example, an athlete will make an appraisal of the demands of a particular training session or competition, evaluate their ability to meet those demands, and the potential consequences of success or failure.
 The model predicts that athlete's with a history of many stressors, personality traits that intensify the stress response and few coping resources to deal with the situation are at risk of sustaining an injury due to the \enquote{increased physiological arousal and/or attentional deficits} caused by the stress response (Williams and Andersen, 1998, p.~7).
 Specifically, Williams and Andersen (1998) suggested several mechanisms through which an elevated stress response might exert its effect, for example, increased muscle tension, attentional narrowing and increased distractibility. Compared to the psychological factors outlined in the previous section, few researchers have investigated these proposed mechanisms and the research that has been conducted has mainly focused on the attentional stress response mechanisms proposed by Williams and Andersen.
-For example, Andersen and Williams (1999)
+For example, Andersen \& Williams (1999)
 measured injury occurrence, negative life event stress and performance on a perception task under both normal and stressful conditions and found that individuals with high negative life events and who experienced greater peripheral narrowing under stress sustained more injuries than individuals with the opposite profile
-The findings were later supported by Rogers and Landers (2005)
+The findings were later supported by Rogers \& Landers (2005)
 who reported that peripheral narrowing during stress mediated 8.1\% of the relationship between major life events and injury.
 The remaining studies examined attentional deficits using the ImPACT (ImPACT Applications, Inc., Pittsburgh, PA) test battery to examine the relationship between verbal memory, visual memory, processing speed, reaction time and injury. Wilkerson (2012)
-reported that increased reaction time at the start of the season predicted injury in a sample of 76 football players, whereas Swanik, Covassin, Stearne, and Schatz (2007)
+reported that increased reaction time at the start of the season predicted injury in a sample of 76 football players, whereas Swanik, Covassin, Stearne, \& Schatz (2007)
 employing a retrospective design found individuals who had reported a previous anterior cruciate ligament injury demonstrated increased reaction time compared to healthy matched controls.
 
 Although these studies provide support for a relationship between attentional deficits and injury as proposed by Williams and Andersen (1998), the ecological validity of the studies can be questioned.
@@ -499,7 +536,7 @@ As a result, mechanisms, particularly those that are related to the physiologica
 
 While Williams and Andersen's (1998) model has been the most widely cited model of injury in the literature, it has a number of limitations.
 A major criticism of the model is the narrow focus on cognitive aspects of stress and the stress response (Ivarsson et al., 2017).
-The model does not include any physiological or environmental factors that are also likely to contribute to injury occurrence that are central to other models of injury such as those proposed by Bahr and Krosshaug (2005) and Meeuwisse et al. (2007).
+The model does not include any physiological or environmental factors that are also likely to contribute to injury occurrence that are central to other models of injury such as those proposed by Bahr \& Krosshaug (2005) and Meeuwisse et al. (2007).
 A more complete model of injury occurrence needs to acknowledge the contribution of both psychosocial variables and other physiological or environmental factors known to relate to injury.
 An example of such a model, which included a combination of biomechanical factors such as; mechanical load, on field behaviour and skill, load tolerance, and various psychological factors including competitive motivation, cognition, risk assessment and perception of load, was proposed by McIntosh (2005).
 Unfortunately, the model has not been adopted as a framework for research, possibly due to the emphasis on biomechanics, which makes it less accessible for researchers from other sports science disciplines.
@@ -513,13 +550,13 @@ An athlete's injury risk is likely to be dynamic and will vary over the course o
 By only measuring risk factors at one point in time, important information is missed regarding how \emph{changes} in those risk factors may relate to injury occurrence.
 A further issue with a single measurement is that the time interval between the measurement and actual injury occurrence is not considered.
 For example, if risk factors are measured in pre-season, but an injury does not occur until much later into that season, the predictive value of the risk factor may be limited, given that the impact of the risk factor may have changed significantly over time.
-To highlight this point, Sibold and Zizzi (2012) found that a number of psychological variables including negative life events, worry and concentration disruption were associated with the number of days until injury occurrence.
+To highlight this point, Sibold \& Zizzi (2012) found that a number of psychological variables including negative life events, worry and concentration disruption were associated with the number of days until injury occurrence.
 To clarify, higher negative life event scores resulted in injury sooner than lower scores.
 These findings support the need for repeated measures designs that assess risk factors as close to injury occurrence as possible to increase their predictive validity.
 
-In order to address the limitations highlighted in the original Williams and Andersen (1998) model, Appaneal and Perna (2014)
+In order to address the limitations highlighted in the original Williams and Andersen (1998) model, Appaneal \& Perna (2014)
 proposed the Biopsychosocial Model of Stress, Athletic Injury and Health (BMSAIH) to serve as an independent extension (Figure \ref{fig:pernamodel}).
-Based on the earlier work of Petrie and Perna (2004), the BMSAIH aimed to:
+Based on the earlier work of Petrie \& Perna (2004), the BMSAIH aimed to:
 (i) clarify the mediating pathways between the stress response and injury;
 (ii) consider other health outcomes and behavioural factors that impact on sports injury and;
 (iii) integrate the impact of exercise and training on athletes' health and injury occurrence (Appaneal \& Perna, 2014).
@@ -536,9 +573,9 @@ Therefore, the BMSAIH provides a framework for future research to examine the re
 \end{figure}
 
 Although offering several potential avenues for research, support for the BMSAIH remains sparse, and research has mainly focused on the hormonal response to high intensity training and injury.
-For example, Perna and McDowell (1995) provided promising evidence in a study that examined life event stress and cortisol response in athletes following an exhaustive graded exercise test.
+For example, Perna \& McDowell (1995) provided promising evidence in a study that examined life event stress and cortisol response in athletes following an exhaustive graded exercise test.
 Participants were split into high and low life event stress (LES) groups, and the high LES group were found to have both higher cortisol in response to the graded exercise test, and increased symptomatology (e.g., muscle complaints and viral illness) over the 30 days following the graded exercise test.
-The study by Perna and McDowell (1995) did not, however, explicitly examine the relationship between cortisol response to high intensity training and sports injury, and very few studies have explored the relationship further.
+The study by Perna \& McDowell (1995) did not, however, explicitly examine the relationship between cortisol response to high intensity training and sports injury, and very few studies have explored the relationship further.
 
 In addition to hormonal changes, there are several other physiological stress-related markers that could be included in research using the BMSAIH model.
 For example, measures of heart rate variability (Djaoui, Haddad, Chamari, \& Dellal, 2017; Williams 2017),
@@ -573,8 +610,8 @@ As such, the complex system approach proposed by Bittencourt et al. (2016) provi
 While sport injury rates are continuing to rise, a large body of research has identified a multitude of factors that are related to injury occurrence.
 In particular, stress, from both a psychological and physiological perspective, plays a major role in injury occurrence.
 However, stress-related factors have often been studied in isolation, and their contribution to a more holistic view of injury occurrence has not been as well established.
-Recently, both Appaneal and Perna (2014) and Bittencourt et al. (2016) have provided frameworks to further sport injury research.
-Appaneal and Perna (2014) offered an extension to the widely cited Williams and Andersen (1998) model of stress and injury that included additional physiological stress-related markers that may act synergistically with the psychological characteristics from Williams and Andersen's (1988) model.
+Recently, both Appaneal \& Perna (2014) and Bittencourt et al. (2016) have provided frameworks to further sport injury research.
+Appaneal \& Perna (2014) offered an extension to the widely cited Williams and Andersen (1998) model of stress and injury that included additional physiological stress-related markers that may act synergistically with the psychological characteristics from Williams and Andersen's (1988) model.
 In addition, Bittencourt et al. (2016) proposed a contemporary view of injury based on complex systems theory and highlighted the need for appropriate research designs and analysis techniques that can address the dynamic nature of injury occurrence.
 Together, these studies have formed the foundation for the current body of research of which the purpose was to explore the relationships between psychological sources of stress, physiological stress-related markers and injury occurrence.
 Specifically, the aims of this thesis were threefold:
@@ -596,7 +633,7 @@ Specifically, the aims of this thesis were threefold:
 The purpose of this chapter is to provide a rationale for the inclusion of the variables and the measures employed in the present research programme.
 This includes discription of the pilot testing, and the reliability and validity of the selected measures.
 As highlighted earlier, one of the major criticisms of Williams and Andersen's (1998) model is that it only includes psychological predictors of sports injury, despite evidence that factors associated with an athlete's physical status and response to training are also associated with athletic injury (Appaneal \& Perna, 2014; Petrie \& Perna, 2004).
-To address this limitation, Appaneal and Perna (2014) proposed the Biopsychosocial model of stress, athletic injury and health (BMSAIH) to serve as an independent extension to Williams and Andersen's (1998) model.
+To address this limitation, Appaneal \& Perna (2014) proposed the Biopsychosocial model of stress, athletic injury and health (BMSAIH) to serve as an independent extension to Williams and Andersen's (1998) model.
 The BMSAIH illustrates how psychological distress and physiological stress-related markers may interact and exacerbate the stress response, increasing the risk of injury.
 Although research supporting the BMASIH has largely focused on the hormonal response to high intensity training, there is a growing body of literature that has identified several physical markers that can indicate an athlete's physiological status (Djaoui et al., 2017; Lee et al., 2017).
 These markers provide a means by which athletes and coaches can detect when the balance between the training stress required for physiological adaptation, and recovery, is not appropriate (Borresen \& Lambert, 2009).
@@ -620,7 +657,7 @@ Participants are asked to rate the perceived impact of each life event they have
 Negative and positive life event scores are calculated by summing the negative and positives score respectively.
 A score for total life events is calculated by summing the absolute values for both negative and positive life events.
 Prior to the development of the LESCA, sports injury research had been limited to general scales of life event stress such as the Social Readjustment Rating Scale (SRRS; Holmes \& Rahe, 1967) and Life Experience Survey (LES; Sarason et al., 1978).
-However, a review by Andersen and Williams (1988) indicated the SRRS and LES scales were inappropriate for sport specific research and needed to be refined to better establish the link between major life events and sports injury.
+However, a review by Andersen \& Williams (1988) indicated the SRRS and LES scales were inappropriate for sport specific research and needed to be refined to better establish the link between major life events and sports injury.
 Consequently, Petrie (1992) developed the LESCA to address the need for a measure of life event stress suitable for an athletic collegiate population.
 Indeed, the LESCA has frequently been used in research investigating psychological characteristics associated with athletic injury (e.g., Maddison \& Prapavessis, 2005; Gunnoe et al., 2001; Ivarsson \& Johnson, 2010; Rogers \& Landers, 2005), and remains the most comprehensive scale available to assess major life events in a population of athletes to date (Ivarsson et al., 2017).
 
@@ -683,7 +720,7 @@ RST is a neuropsychological theory of personality conceptualised in terms of mot
 
 First proposed by Gray (1982), RST outlined two systems of behavioural activation and behavioural inhibition (BAS and BIS, respectively).
 The BAS and BIS were proposed to govern approach behaviour towards appetitive stimuli and avoidance from aversive stimuli (Montag, Smillie, Markett, Reuter, \& Cooper, 2016).
-However, the original RST theory was updated by Gray and McNaughton (2000) who made a distinction between BIS and the Fight Flight Freeze System (FFFS; McNaughton \& Corr, 2004).
+However, the original RST theory was updated by Gray \& McNaughton (2000) who made a distinction between BIS and the Fight Flight Freeze System (FFFS; McNaughton \& Corr, 2004).
 In the revised RST (rRST), the FFFS is proposed to be responsive to all punishing and threatening stimuli (e.g., physical pain from training or competition) and the BAS is proposed to be responsive to all rewarding and appetitive stimuli (e.g., prize money from winning a major competition).
 In contrast to the original theory, the BIS is thought to be activated during instances of goal conflict, for example when a threatening stimulus must be approached (Corr, 2008).
 Specifically, BIS is involved in the processes that will generate anxiety, which will result in more cautious approach behaviour (Corr, 2008).
@@ -712,7 +749,7 @@ To establish the factorial validity of the 65-item model of the RST-PQ, Bayesian
 BSEM was used for the validation as it had several advantages over the maximal likelihood procedures used in traditional confirmatory factor analysis (CFA).
 In particular, BSEM allows informative variance priors to be specified on cross-loadings, which in traditional CFA, are held at zero and can lead to a blocked or miss-specified model (Marsh et al., 2009).
 By recognising that some small cross-loadings and correlated residuals could be present within the items, BSEM can reduce the possibility of model miss-specification (Gucciardi \& Zyphur, 2016).
-To perform the validation, three models were specified following the recommendations of Muthén and Asparouhov (2012).
+To perform the validation, three models were specified following the recommendations of Muthén \& Asparouhov (2012).
 Model one specified non-informative priors on the factor loadings and exact zeros on the cross-loadings and correlated residuals.
 Model two specified non-informative priors on the factor loadings, informative approximate zeros on the cross-loadings and exact zeros on the correlated residuals.
 Lastly, model three specified non-informative priors on the factor loadings, and informative approximate zeros on the cross-loadings and correlated residuals.
@@ -769,16 +806,16 @@ HRV data were collected over a 77-day period where each athlete was training app
 During the observation period, one of the athletes performed poorly in a key triathlon event and was diagnosed as non-functionally over-reached and subsequently reactivated the dormant virus herpes zoster (shingles).
 The athlete's data revealed large linear reductions in the 7-day rolling average Ln RMSSD leading up to the period when the athlete was diagnosed as non-functionally over-reached.
 In contrast, the control athlete's data remained stable throughout the observation period, showing the potential value for repeatedly monitoring HRV through periods of high intensity training.
-Lima-Borges, Martinez, Vanderlei, Barbosa, and Oliveira-Junior (2018) assessed stress, recovery and several indices of HRV including LF, HF and RMSSD in sprint and endurance-based competitive swimmers during general training, specific training, and competitive stages of a 20-week season.
+Lima-Borges, Martinez, Vanderlei, Barbosa, \& Oliveira-Junior (2018) assessed stress, recovery and several indices of HRV including LF, HF and RMSSD in sprint and endurance-based competitive swimmers during general training, specific training, and competitive stages of a 20-week season.
 Reductions in both HF HRV and RMSSD were associated with increased injury incidence in the sprint group, which Lima-Borges et al. (2018) attributed to the progressive activation of the sympathetic nervous system as a result of the higher intensity training in the sprint group compared to the endurance group.
 These studies highlight the potential predictive value of using HRV as a marker of training-related stress.
 
 In addition to training related stress, reduced HRV indices have also been found to be associated with increased life event stress.
-For example, Pieper, Brosschot, Van Der Leeden, and Thayer (2007)
+For example, Pieper, Brosschot, Van Der Leeden, \& Thayer (2007)
 found that both worry episodes and stressful events were independently associated with elevated heart rate and decreased levels of RMSSD.
 Dishman et al. (2000)
 assessed perceived stress, and LF and HF power in 92 healthy participants with above average cardiovascular fitness and found a negative relationship between stress and normalized HF HRV (\emph{p} = 0.038).
-Dishman et al.'s (2000) findings were supported by Sin, Sloan, McKinley, and Almeida (2016)
+Dishman et al.'s (2000) findings were supported by Sin, Sloan, McKinley, \& Almeida (2016)
 who observed that greater perceived stressor reactivity was associated with reduced HRV indices including RMSSD, SDNN and HF in a large sample of 909 participants.
 The combined evidence that reduced HRV is a marker of training and life event stress make HRV a suitable measure to investigate the synergistic action of both psychological and physiological sources of stress that can
 contribute to injury occurrence.
@@ -866,7 +903,7 @@ Indeed, the link between muscle stiffness and injury was proposed as a possible 
 The increased stiffness was proposed to cause decreased flexibility and reduced motor coordination, potentially increasing the risk of athletic injury (Williams \& Andersen, 1998).
 However, few studies have provided evidence for the relationship between acute changes in muscle stiffness as a result of the stress response in relation to athletic injury.
 
-In their extension to Williams and Andersen's (1998) model, Appaneal and Perna (2014) suggested that athletic injury was the result of the synergistic action between psychological stressors and training related stress from high intensity exercise.
+In their extension to Williams and Andersen's (1998) model, Appaneal \& Perna (2014) suggested that athletic injury was the result of the synergistic action between psychological stressors and training related stress from high intensity exercise.
 Muscle stiffness is often increased in response to high intensity exercise as a result of eccentric muscle contractions that occur in a variety of movements (Hedayatpour \& Falla, 2015).
 When an athlete is exposed to prolonged periods of high intensity training cellular changes within the muscle structure can cause increased muscle stiffness in the resting muscle (Hedayatpour \& Falla, 2015).
 Therefore, measurement of muscle stiffness provides a marker of training related stress that may precede injury occurrence.
@@ -1130,7 +1167,7 @@ The repetition of failed trials added a considerable amount of time to the proto
 Approximately 90 min were needed to record data for all 10 participants, which was longer than the desired data collection protocol of 60 min for all measures in the current study.
 In contrast, participants found the BESS protocol simple and the testing was completed within the target 60 min.
 However, participants found the double leg stance on both firm and foam surfaces simple, ultimately contributing no errors to the total error score.
-In a previous study, Hunt, Ferrara, Bornstein, and Baumgartner (2009) examined the contribution of each of the stances used in the BESS and found the double leg stance contributed only 0.17\% of the variance within the test.
+In a previous study, Hunt, Ferrara, Bornstein, \& Baumgartner (2009) examined the contribution of each of the stances used in the BESS and found the double leg stance contributed only 0.17\% of the variance within the test.
 Furthermore, the test-retest reliability of the BESS increased from 0.67 to 0.71 when the double leg stance was removed (Hunt et al., 2009).
 Based on the findings from the pilot study and those of Hunt et al., (2009) the double leg stance was removed for the proposed research.
 In addition, a limitation of the original protocol was that only one single leg stance on the non-dominant leg was examined.
@@ -1155,9 +1192,9 @@ Specifically, the BMSAIH predicts that an athlete who performs high intensity tr
 A heightened cortisol response has been proposed to have several negative effects, for example, elevated evening cortisol has been associated with a suppressed immune system, poor sleep and reduced growth hormone release, all of which can inhibit recovery following intense exercise and increase the risk of athletic injury (Brownlee, Moore, \& Hackney, 2005; McEwen, 2008; O'Donnell, Bird, Jacobson, \& Driller, 2018).
 
 Despite the promising theoretical foundations for a relationship between cortisol and sports injury, literature supporting the relationship remains inconclusive.
-Perna and McDowell (1995) provided promising evidence in a study that examined life event stress and cortisol response in athletes following an exhaustive graded exercise test.
+Perna \& McDowell (1995) provided promising evidence in a study that examined life event stress and cortisol response in athletes following an exhaustive graded exercise test.
 Participants were split into high and low life event stress (LES) groups, and the high LES group were found to have both higher cortisol in response to the graded exercise test, and increased symptomatology (e.g., muscle complaints and viral illness) over the subsequent 30 days following the graded exercise test.
-The study by Perna and McDowell (1995) did not, however, explicitly examine the relationship between cortisol response to high intensity training and sports injury.
+The study by Perna \& McDowell (1995) did not, however, explicitly examine the relationship between cortisol response to high intensity training and sports injury.
 Other literature that has examined the role of cortisol in high intensity training has focused on the relationship between cortisol and sports performance (Anderson, Lane, \& Hackney, 2016; Cormack, Newton, McGuigan, \& Cormie, 2008; Rowell et al., 2018; Siart, Nimmerichter, Vidotto, \& Wallner, 2017; Strahorn, Serpell, McKune, \& Pumpa, 2017).
 For example, Rowell et al. (2018) used testosterone and cortisol concentrations as markers of training load and match performance in a group of 23 football players.
 High intensity training was found to increase the concentration of both testosterone and cortisol, however no relationship between testosterone and cortisol concentration and match performance was found.
@@ -1171,7 +1208,7 @@ Such an relationship will provide support for the BMSAIH model and strengthen th
 \subsubsection{Collection of saliva}\label{collection-of-saliva}}
 
 Several approaches to assessing the concentration of cortisol exist within the literature.
-Salivary cortisol is often preferred over other forms such as serum cortisol obtained from blood samples and urinary cortisol due to the relative ease with which it can be collected. Furthermore, Gozansky, Lynn, Laudenslager, and Kohrt (2005) reported that more physiologically relevant data were obtained from salivary cortisol compared to total serum cortisol when measuring dynamic hypothalamic-pituitary-adrenal activity.
+Salivary cortisol is often preferred over other forms such as serum cortisol obtained from blood samples and urinary cortisol due to the relative ease with which it can be collected. Furthermore, Gozansky, Lynn, Laudenslager, \& Kohrt (2005) reported that more physiologically relevant data were obtained from salivary cortisol compared to total serum cortisol when measuring dynamic hypothalamic-pituitary-adrenal activity.
 Salivary cortisol is also preferred over hair cortisol which is more suited to measuring chronic levels of cortisol, as opposed to an acute cortisol response following intense exercise (Gerber et al., 2012).
 Two commonly used salivary techniques are passive drool and oral swab (Gröschl, Read, Hughes, \& Riad-Fahmy, 2008).
 The passive drool technique requires participants to provide approximately 2 ml of saliva through a straw into a collection tube.
@@ -1251,14 +1288,14 @@ Although the majority of injury prediction research has examined the effect of t
 To elaborate, the model suggests that injuries are likely to occur through either increased physiological arousal resulting in increased muscle tension and reduced flexibility or attentional deficits caused by increased distractibility and peripheral narrowing. However, to date, the research exploring the mechanisms has largely focused on attentional deficits (Andersen \& Williams, 1999; Rogers \& Landers, 2005; Swanik et al., 2007; Wilkerson, 2012).
 For example, Andersen and Williams (1999)
 measured peripheral and central vision during high and low stress conditions and found athletes with high life event stress coupled with low social support had greater peripheral narrowing under stressful conditions compared to athletes with the opposite profile; these athletes went on to sustain an increased number of injuries during the following season.
-Rogers and Landers (2005) supported Andersen and Williams's (1999) earlier findings reporting that peripheral narrowing under stress mediated 8.1\% of the relationship between negative life events and injury.
+Rogers \& Landers (2005) supported Andersen and Williams's (1999) earlier findings reporting that peripheral narrowing under stress mediated 8.1\% of the relationship between negative life events and injury.
 However, few attempts have been made to explain the remaining variance between negative life events and athletic injury through the other proposed mechanisms in Williams and Andersen's (1998) model, such as increased muscle tension and reduced motor control.
 
 One possible reason for this is the multifactorial nature of injury and the possible contribution of other non-psychological factors to the stress response
 (Meeuwisse et al., 2007; Wiese-Bjornstal, 2009).
 For example, a large body of research indicates that training-related stress is also likely to be related to the stress response and injury occurrence (Djaoui et al., 2017; Lee et al., 2017),
 and may account for the unexplained variance from the psychological predictors of injury.
-Considering these limitations, Appaneal and Perna (2014)
+Considering these limitations, Appaneal \& Perna (2014)
 proposed the bio-psychosocial model of stress athletic injury and health (BMSAIH) to serve as an extension to Williams and Andersen's (1998) model.
 To elaborate, the BMSAIH aimed to clarify the mediating pathways between the stress response and injury,
 consider other health outcomes and behavioural factors that impact sports participation,
@@ -2206,7 +2243,7 @@ Consequently, BNs provided a contemporary approach that improved upon traditiona
 
 As with all research, there were limitations with the present study.
 Firstly, the choice was made to binarise variables in the first network so only \enquote{Low} and \enquote{High} states were observed.
-Although binarising variables is a common procedure in Bayesian network analysis and has several advantages, Qian and Miltner (2015) highlighted that both a loss of statistical accuracy and potential difficulty in subsequent interpretation of the model may arise when following a binarising procedure.
+Although binarising variables is a common procedure in Bayesian network analysis and has several advantages, Qian \& Miltner (2015) highlighted that both a loss of statistical accuracy and potential difficulty in subsequent interpretation of the model may arise when following a binarising procedure.
 For example, the meaning of a \enquote{Low} and \enquote{High} value in the current study is only meaningful for the population that was studied, and there could be additional levels within each category that were not investigated.
 A second limitation was the nature of the physiological measures used in the current study.
 In order to collect data on a large sample of participants, relatively simple measures were required to ensure the viability of the data collection; however, some of these measures may not have been sensitive enough to detect more subtle variation in athletes.
@@ -2228,7 +2265,7 @@ Both responses would be scored a \enquote{-4}; however, there could be vastly di
 
 \section{Study 2: The relationship between negative life events, muscle stiffness, cortisol and injury occurrence in team sport athletes.}
 
-The findings from the first study raised some important questions about the role of different physiological and psychological markers of stress in the prediction of injury. Firstly, given the widespread support in the research literature for negative life events being a predictor of athletic injury, the at best weak relationship between negative and major life events and injury was very surprising (cf.~Passer and Seese (1983); Maddison and Prapavessis (2005); Gunnoe et al. (2001); Ivarsson and Johnson (2010); Ivarsson et al. (2017); Williams and Andersen (2007)).
+The findings from the first study raised some important questions about the role of different physiological and psychological markers of stress in the prediction of injury. Firstly, given the widespread support in the research literature for negative life events being a predictor of athletic injury, the at best weak relationship between negative and major life events and injury was very surprising (cf.~Passer \& Seese (1983); Maddison \& Prapavessis (2005); Gunnoe et al. (2001); Ivarsson \& Johnson (2010); Ivarsson et al. (2017); Williams \& Andersen (2007)).
 Although the Life Event Survey for Collegiate Athletes (LESCA) is a widely used measure of life event stress in the sports injury literature, the way the questionnaire is scored may disguise some important information about the nature of the life events experienced.
 Specifically, the \emph{number} of events that make up the score are not considered.
 To elaborate, an athlete who answers four events with a -1 (moderately negative) would get the same score as someone who answers one event as a -4 (extremely negative).
@@ -2240,9 +2277,9 @@ Cortisol is released in response to both psychological stress, such as to major 
 Although cortisol plays a vital role in response to stress by increasing substrate mobilisation (Anderson et al., 2016), prolonged exposure to increased levels of cortisol can have several negative effects.
 For example, elevated evening cortisol has been associated with a suppressed immune system, poor sleep and lessened growth hormone release, all of which can inhibit recovery following intense exercise, and increase the risk of athletic injury (Brownlee et al., 2005; McEwen, 2008; O'Donnell et al., 2018).
 However, the link between cortisol and injury has not been well established within the literature.
-Perna and McDowell (1995) provided promising evidence in a study that examined life event stress and cortisol response in athletes following an exhaustive graded exercise test.
+Perna \& McDowell (1995) provided promising evidence in a study that examined life event stress and cortisol response in athletes following an exhaustive graded exercise test.
 Participants were split into high and low life event stress (LES) groups, and the high LES group were found to have both higher cortisol in response to the graded exercise test, and increased symptomatology (e.g., muscle complaints and viral illness) over the subsequent 30 days following the graded exercise test.
-Perna and McDowell (1995) did not, however, explicitly examine the relationship between cortisol response to high intensity training and sports injury.
+Perna \& McDowell (1995) did not, however, explicitly examine the relationship between cortisol response to high intensity training and sports injury.
 
 Finally, in terms of how stress-related factors relate to injury \emph{severity}, in the first study, injury was treated as a binary variable, as is often common in sports injury research (Bittencourt et al., 2016).
 However, treating injury as a binary variable may result in important information being lost regarding the stress-related markers of an athlete who sustains more severe injuries.
@@ -2680,7 +2717,7 @@ Given the high drop out rate, the sample size was relatively small compared to t
 A large sample would help to combat the large credible intervals present in the model estimates that made drawing conclusive conclusions regarding the different releationships difficult.
 Additionally, the field-based nature of the data collection meant there was an absence of control over training intensity.
 
-Future research should aim to clarify the relationship between negative life event stress, cortisol and injury as proposed by Appaneal and Perna (2014).
+Future research should aim to clarify the relationship between negative life event stress, cortisol and injury as proposed by Appaneal \& Perna (2014).
 While the current study was unable to find a clear relationship, there were several confounding variables that may have impacted upon the results.
 In addition, a stronger positive relationship was observed between cortisol and muscle stiffness, which could provide an interesting avenue for research to explore further.
 Future research could also further investigate the novel scoring approach outlined in the current research.
@@ -2783,7 +2820,7 @@ The stress-injury model proposed by Williams and Andersen (1998) is one of the m
 personality characteristics (Junge, 2000; Lavallée \& Flint, 1996; Petrie, 1993) and
 coping resources (Hardy, 1992; Petrie, 1993).
 A major criticism of Williams and Andersen's (1998) model, however, is the focus on the cognitive stress response and the absence of additional sources of stress, such as environmental and physiological factors, that are also likely to influence injury occurrence (Ivarsson et al., 2017).
-To address this issue, Appaneal and Perna (2014) proposed the BMSAIH, which extended the original model to include other behavioural, environmental and physiological factors that are also likely to contribute to the occurrence of injury.
+To address this issue, Appaneal \& Perna (2014) proposed the BMSAIH, which extended the original model to include other behavioural, environmental and physiological factors that are also likely to contribute to the occurrence of injury.
 In particular, the BMSAIH proposed that the synergistic action of both psychological stress and physiological stress, such as that sustained in response to training, will exacerbate the stress response and increase the risk of injury.
 However, despite providing a framework for research to extend the findings of Williams and Andersen (1998) the BMSAIH has received relatively little attention within the sport injury literature, potentially because of the insufficient detail offered regarding additional predictive variables that could be included alongside the psychosocial characteristics proposed in the original model.
 While the BMSAIH alludes to autonomic nervous systems (ANS) and hypothalamic pituitary adrenal (HPA) axis activity being responsible for the physiological response to stress, as well as hormonal markers including cortisol and testosterone as potential mediating pathways for the stress-injury relationship, few specific predictive variables are offered beyond this.
@@ -2819,7 +2856,7 @@ In the second study, a weak positive relationship between the change in cortisol
 There was also a weak positive relationship between the change in cortisol and muscle stiffness (estimate = 0.07, 95\% CrI = {[}-0.25, 0.40{]}), highlighting an interesting relationship for future research to explore further.
 
 One characteristic that all the markers share is their relationship with the autonomic nervous system (ANS) and hypothalamic-pituitary-adrenal (HPA) axis.
-Appaneal and Perna (2014) proposed the ANS, and subsequent HPA activity, as one of the mediating pathways through which psychological stress will combine with other physiological effects of training-related stress to exacerbate the overall stress response.
+Appaneal \& Perna (2014) proposed the ANS, and subsequent HPA activity, as one of the mediating pathways through which psychological stress will combine with other physiological effects of training-related stress to exacerbate the overall stress response.
 Indeed, both the ANS and HPA axis are extremely sensitive to all forms of \enquote{stress} and, either directly or indirectly, will cause the modification of many systems within the body to prepare, react, or cope with, increasing levels of stress (Bellenger et al., 2016; Chrousos, 2009; Yaribeygi, Panahi, Sahraei, Johnston, \& Sahebkar, 2017).
 These notions are central to the concept of allostasis, or stability through change, which has surprisingly received little attention in the sports injury literature despite a large body of research linking the psychological and physiological effects of stress that would be of value to the stress-injury relationship (Galambos et al., 2005; Ganzel et al., 2010; McEwen, 2007; Sterling \& Eyer, 1988).
 Of particular relevance to sport injury is the concept of allostatic load, which has been defined as the \enquote{long-term carry-forward of the sequelae of stress and adversity} (Rutter, 1994, p. 373).
@@ -2831,7 +2868,7 @@ The current programme of research has therefore provided the sport injury litera
 
 In addition to the inclusion of stress-related physiological markers, the current research has also provided novel contributions to our understanding of the role of well-established psychosocial variables included in the original Williams and Andersen (1998) model, particularly with regard to the measures used to assess them.
 For example, the current research sought to integrate Reinforcement Sensitivity Theory (RST; Corr, 2008), which attempts to explain the multidimensional nature of personality.
-Initially proposed by Gray (1982), the RST was revised by Gray and McNaughton (2000) to include three systems that are proposed to govern an individual's behaviour, specifically the behavioural activation system (BAS), behavioural inhibition system (BIS) and fight-flight-freeze system (FFFS).
+Initially proposed by Gray (1982), the RST was revised by Gray \& McNaughton (2000) to include three systems that are proposed to govern an individual's behaviour, specifically the behavioural activation system (BAS), behavioural inhibition system (BIS) and fight-flight-freeze system (FFFS).
 According to the RST, the FFFS and BAS are responsive to all punishing and threatening stimuli (e.g., physical pain from training or competition) and all rewarding and appetitive stimuli (e.g., prize money from winning a major competition) respectively.
 When there is conflict between these two systems, BIS is activated and engages in risk assessment and threat identification that may inhibit or result in a more cautious approach or avoidance behaviour initially considered by the BAS or FFFS systems.
 Excessive BIS activation can elicit the emotional state of anxiety, which provides a link to the original Williams and Andersen (1998) model where high levels of anxiety have previously been found to be related to injury occurrence (Ivarsson \& Johnson, 2010; Lavallée \& Flint, 1996; Petrie, 1993)
@@ -2850,7 +2887,7 @@ The positive relationship between BIS and FFFS is supported by RST and is likely
 Each of the latter behaviours is related to higher anxiety, and the relationship with HRV provides physiological evidence supporting this association. For example, high levels of anxiety and anticipation of stressful situations are known to result in decreased high frequency HRV, as measured by the root mean square successive difference (RMSSD) between heart beats (Chalmers et al., 2014; Pulopulos et al., 2018).
 As such, the findings demonstrate a link between the constructs and associated behaviours proposed in RST and physiological response expected with such behaviours.
 Further research should continue to explore how the RST can expand this area of the sports injury literature.
-To summarise, the current body of research has both integrated elements from Appaneal and Perna's (2014) BMSAIH by including stress-related physiological markers, and also made new contributions regarding the psychosocial factors proposed in Williams and Andersen (1998) model.
+To summarise, the current body of research has both integrated elements from Appaneal and Perna's (2014) BMSAIH by including stress-related physiological markers, and also made new contributions regarding the psychosocial factors proposed in Williams \& Andersen (1998) model.
 The effect of these individual psychological factors and stress-related markers, in addition to interactions \emph{between} the different variables were explored to investigate how they act in a synergistic fashion to exacerbate the stress response.
 The analysis drew inspiration from Bayesian principles and complex systems theory to provide an approach that offers an alternative to the commonly used frequentist multivariate regression-based techniques and captures the holistic nature of the research.
 The result is a novel coalescence of traditional theories and contemporary ideas, supported by an innovative analysis, that together answer the calls for an interdisciplinary perspective within sports injury research.
@@ -2891,8 +2928,8 @@ By adhering to a clear and transparent approach to Bayesian analysis, the thesis
 \subsubsection{Measurement issues}\label{measurement-issues-1}}
 
 The additional complexity of interdisciplinary research presents researchers with several challenges in terms of measurement.
-To help researchers with these challenges, Tobi and Kampen (2018) have recently proposed the Methodology for Interdisciplinary Research (MIR) framework (Figure \ref{fig:mir-framework}) that highlights several issues that were present in the current research, particularly when choosing variables of interest, and how they should be measured.
-Specifically, Tobi and Kampen (2018) discuss the impact that instrument selection and associated reliability have on the execution of a data collection plan and the quality of data that can be collected.
+To help researchers with these challenges, Tobi \& Kampen (2018) have recently proposed the Methodology for Interdisciplinary Research (MIR) framework (Figure \ref{fig:mir-framework}) that highlights several issues that were present in the current research, particularly when choosing variables of interest, and how they should be measured.
+Specifically, Tobi \& Kampen (2018) discuss the impact that instrument selection and associated reliability have on the execution of a data collection plan and the quality of data that can be collected.
 While the data collection was planned and executed prior to the publication of Tobi and Kampen's (2018) framework, the points discussed are particularly salient in the current research, which combined questionnaire-based data collection with measurement of stress-related physiological markers in an interdisciplinary setting.
 A clear difference between these types of data was that questionnaires could be completed with relatively low input from the researcher, as participants were simply given a set of instructions to follow and were able to complete the questionnaire at their own pace during the data collection session.
 In contrast, each of the physiological measures required the researcher to prepare and/or manually perform each measurement. Due to the large-scale of the study, measures that had a high time cost were therefore not suitable for the data collection procedure.
@@ -2976,7 +3013,7 @@ Study 1 demonstrated how the combined effect of psychological and physiological 
 As such, multiple related risk factors for injury need to be considered when assessing an athlete's training plan, readiness to engage in, and recovery from, training.
 For example, in addition to monitoring training loads and using tools to determine an athlete's physiological status, coaches need to also consider an athlete's psychological state.
 In particular, when an athlete is facing significant life event stress, training intensity and volume may need to be adjusted to help the athlete cope with the additional duress they are experiencing.
-This holistic approach centred around the athlete has recently been emphasised by Dijkstra, Pollock, Chakraverty, and Alonso (2014), who advocate an integrated model regarding athlete's performance, health and coaching.
+This holistic approach centred around the athlete has recently been emphasised by Dijkstra, Pollock, Chakraverty, \& Alonso (2014), who advocate an integrated model regarding athlete's performance, health and coaching.
 Such an approach prioritises a balanced approach to training and competition, incorporating information from several sources (i.e., psychological and physiological markers of stress) to ensure the optimal health and well-being of the athlete.
 These recommendations are supported and echoed by the current research that found when an athlete is experiencing psychological stress due to exposure to negative life events in conjunction with physiological characteristics that are associated with an increased risk of injurious events, injury risk may be exacerbated further.
 Specifically, the identification of a \enquote{high risk} profile may help to reduce the risk of injury for athletes.
@@ -3026,12 +3063,12 @@ Study 2 addressed the issue by calculating an average response and found that th
 Future studies could examine this relationship in greater detail or develop a scale that is better able to distinguish between and account for both minor and major life events.
 
 A second line of enquiry advocated is for researchers to explore other factors that have been proposed by both the Williams and Andersen's (1998) and Appaneal and Perna's (2014) models, particularly in relation to an interdisciplinary perspective.
-For example, Williams and Andersen (1998) proposed coping resources (e.g., coping behaviours, social support systems and stress management) and Appaneal and Perna (2014) proposed behavioural mechanisms (e.g., impaired self-care and poor sleep quality) as factors that are likely to be related to injury occurrence.
+For example, Williams \& Andersen (1998) proposed coping resources (e.g., coping behaviours, social support systems and stress management) and Appaneal \& Perna (2014) proposed behavioural mechanisms (e.g., impaired self-care and poor sleep quality) as factors that are likely to be related to injury occurrence.
 However, comparatively few studies have investigated these factors in comparison to other psychosocial factors such as major life events and personality characteristics (Ivarsson et al., 2017).
 Indeed, how these coping and behavioural factors contribute alongside the physiological markers of stress, such as those used in the current research, may provide a more holistic understanding of the stress-injury relationship.
 
-To extend the proposed variables in both Williams and Andersen (1998) and Appaneal and Perna (2014), future research should also continue to explore other factors that may be related to injury occurrence.
-While the variables proposed by Williams and Andersen (1998) and Appaneal and Perna (2014) provide a suitable starting point, there are many other possibilities that may provide additional insight into the stress-injury relationship.
+To extend the proposed variables in both Williams \& Andersen (1998) and Appaneal \& Perna (2014), future research should also continue to explore other factors that may be related to injury occurrence.
+While the variables proposed by Williams \& Andersen (1998) and Appaneal \& Perna (2014) provide a suitable starting point, there are many other possibilities that may provide additional insight into the stress-injury relationship.
 Indeed, allostatis may provide sports injury researches with several new avenues to examine in addition to variables that have not yet been widely used in the sports injury literature.
 For example the Allostaic Load Index has been proposed as a basis for assessing the wear and tear on the body caused by chronic stress and combines 10 variables including; cortisol, epinephrine, norepinephrine and dehydroepiandrosterone sulphate (DHEAS), systolic and diastolic blood pressure, waist-hip ratio, high-density lipoprotein (HDL) and total cholesterol ratio and glycosylated haemoglobin (Seeman, Singer, Rowe, Horwitz, \& McEwen, 1997).
 A score is calculated based on the number of markers an individual has in the highest risk quartile (Seeman et al., 1997). While other combinations of markers have also been used, and there is not yet consensus regarding the best combination of markers to measure allostatic load (Daniel, Li, Schmidt, Angerer, \& Jarczok, 2014), researchers could use these examples to generate new ideas for how to integrate different markers of stress alongside commonly used measures in sports injury research to extend our understanding of the stress-injury relationship.
@@ -4022,9 +4059,912 @@ Young, T. (2019). \emph{Validation of the revised Reinforcement Sensitivity Theo
 \leavevmode\hypertarget{ref-R-kableExtra}{}%
 Zhu, H. (2019). \emph{KableExtra: Construct complex table with 'kable' and pipe syntax}. Retrieved from \url{https://CRAN.R-project.org/package=kableExtra}
 
+\leavevmode\hypertarget{ref-Abshire2017}{}%
+Abshire, M., Dinglas, V. D., Cajita, M. I. A., Eakin, M. N., Needham, D. M., \& Himmelfarb, C. D. (2017). Participant retention practices in longitudinal clinical research studies with high retention rates. \emph{BMC Medical Research Methodology}, \emph{17}(1), 1--10. \url{https://doi.org/10.1186/s12874-017-0310-z}
+
+\leavevmode\hypertarget{ref-AckermannPaul2016}{}%
+Ackermann, P. W. (2016). Neuronal pathways in tendon healing and tendinopathy - update. \emph{Frontiers in Bioscience}, \emph{19}(8), 1251--1278. \url{https://doi.org/10.2741/4280}
+
+\leavevmode\hypertarget{ref-Agyapong-Badu2013}{}%
+Agyapong-Badu, S., Aird, L., Bailey, L., Mooney, K., Mullix, J., Warner, M., \ldots{} Stokes, M. (2013). Interrater reliability of muscle tone, stiffness and elasticity measurements of rectus femoris and biceps brachii in healthy young and older males. \emph{Working Papers in the Health Sciences}, \emph{1}(4), 1--11. Retrieved from \url{http://eprints.soton.ac.uk/356600/}
+
+\leavevmode\hypertarget{ref-Agyapong-Badu2016}{}%
+Agyapong-Badu, S., Warner, M., Samuel, D., \& Stokes, M. (2016). Measurement of ageing effects on muscle tone and mechanical properties of rectus femoris and biceps brachii in healthy males and females using a novel hand-held myometric device. \emph{Archives of Gerontology and Geriatrics}, \emph{62}, 59--67. \url{https://doi.org/10.1016/j.archger.2015.09.011}
+
+\leavevmode\hypertarget{ref-Aird2012}{}%
+Aird, L., Samuel, D., \& Stokes, M. (2012). Quadriceps muscle tone, elasticity and stiffness in older males: Reliability and symmetry using the MyotonPRO. \emph{Archives of Gerontology and Geriatrics}, \emph{55}(2), e31--e39. \url{https://doi.org/https://doi.org/10.1016/j.archger.2012.03.005}
+
+\leavevmode\hypertarget{ref-AlHaddad2011}{}%
+Al Haddad, H., Laursen, P. B., Chollet, D., Ahmaidi, S., \& Buchheit, M. (2011). Reliability of resting and postexercise heart rate measures. \emph{International Journal of Sports Medicine}, \emph{32}(8), 598--605. \url{https://doi.org/10.1055/s-0031-1275356}
+
+\leavevmode\hypertarget{ref-Aman2016}{}%
+Aman, M., Forssblad, M., \& Henriksson-Larsén, K. (2016). Incidence and severity of reported acute sports injuries in 35 sports using insurance registry data. \emph{Scandinavian Journal of Medicine and Science in Sports}, \emph{26}(4), 451--462. \url{https://doi.org/10.1111/sms.12462}
+
+\leavevmode\hypertarget{ref-Andersen1988}{}%
+Andersen, M. B., \& Williams, J. M. (1988). A model of stress and athletic injury: Prediction and prevention. \emph{Journal of Sport and Exercise Psychology}, \emph{10}(3), 294--306. \url{https://doi.org/10.1123/jsep.10.3.294}
+
+\leavevmode\hypertarget{ref-Andersen1999}{}%
+Andersen, M. B., \& Williams, J. M. (1999). Athletic injury, psychosocial factors and perceptual changes during stress. \emph{Journal of Sports Sciences}, \emph{17}(9), 735--741. \url{https://doi.org/10.1080/026404199365597}
+
+\leavevmode\hypertarget{ref-Anderson2016}{}%
+Anderson, T., Lane, A. R., \& Hackney, A. C. (2016). Cortisol and testosterone dynamics following exhaustive endurance exercise. \emph{European Journal of Applied Physiology}, \emph{116}(8), 1503--1509. \url{https://doi.org/10.1007/s00421-016-3406-y}
+
+\leavevmode\hypertarget{ref-Anderson2017}{}%
+Anderson, T., \& Wideman, L. (2017). Exercise and the cortisol awakening response: A systematic review. \emph{Sports Medicine}, \emph{3}(1), 37. \url{https://doi.org/10.1186/s40798-017-0102-3}
+
+\leavevmode\hypertarget{ref-Appaneal2009}{}%
+Appaneal, R. N., Levine, B. R., Perna, F. M., \& Roh, J. L. (2009). Measuring postinjury depression among male and female competitive athletes. \emph{Journal of Sport and Exercise Psychology}, \emph{31}(1), 60--76. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/19325188}
+
+\leavevmode\hypertarget{ref-Appaneal2014}{}%
+Appaneal, R. N., \& Perna, F. M. (2014). Biopsychosocial model of injury. In R. C. Eklund \& G. Tenenbaum (Eds.), \emph{Encyclopedia of sport and exercise psychology} (pp. 74--77). Thousand Oaks, CA: Sage.
+
+\leavevmode\hypertarget{ref-R-papaja}{}%
+Aust, F., \& Barth, M. (2018). \emph{papaja: Create APA manuscripts with R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
+
+\leavevmode\hypertarget{ref-Bahr2005}{}%
+Bahr, R., \& Krosshaug, T. (2005). Understanding injury mechanisms: A key component of preventing injuries in sport. \emph{British Journal of Sports Medicine}, \emph{39}(6), 324--329. \url{https://doi.org/10.1136/bjsm.2005.018341}
+
+\leavevmode\hypertarget{ref-Bailey2013}{}%
+Bailey, L., Dinesh, S., Warner, M., Stokes, M., \& Samuel, D. (2013). Parameters representing muscle tone, elasticity and stiffness of biceps brachii in healthy older males: Symmetry and within-session reliability using the MyotonPRO. \emph{Journal of Neurological Disorders}, \emph{1}(1), 1--7. \url{https://doi.org/10.4172/2329-6895.1000116}
+
+\leavevmode\hypertarget{ref-Bell2011}{}%
+Bell, D. R., Guskiewicz, K. M., Clark, M. A., \& Padua, D. A. (2011). Systematic review of the balance error scoring system. \emph{Sports Health}, \emph{3}(3), 287--295. \url{https://doi.org/10.1177/1941738111403122}
+
+\leavevmode\hypertarget{ref-Bellenger2016}{}%
+Bellenger, C. R., Fuller, J. T., Thomson, R. L., Davison, K., Robertson, E. Y., \& Buckley, J. D. (2016). Monitoring athletic training status through autonomic heart rate regulation: A systematic review and meta-analysis. \emph{Sports Medicine}, \emph{46}(10), 1461--1486. \url{https://doi.org/10.1007/s40279-016-0484-2}
+
+\leavevmode\hypertarget{ref-Bernards2017}{}%
+Bernards, J., Sato, K., Haff, G., \& Bazyler, C. (2017). Current Research and Statistical Practices in Sport Science and a Need for Change. \emph{Sports}, \emph{5}(4), 87. \url{https://doi.org/10.3390/sports5040087}
+
+\leavevmode\hypertarget{ref-Berntson1997}{}%
+Berntson, G. G., Bigger, J. T., Eckberg, D. L., Grossman, P., Kaufmann, P. G., Malik, M., \ldots{} Molen, M. W. van der. (1997). Heart rate variability: Origins, methods, and interpretive caveats. \emph{Psychophysiology}, \emph{34}, 623--648. \url{https://doi.org/10.1111/j.1469-8986.1997.tb02140.x}
+
+\leavevmode\hypertarget{ref-Beuzen2018}{}%
+Beuzen, T., Marshall, L., \& Splinter, K. D. (2018). A comparison of methods for discretizing continuous variables in Bayesian networks. \emph{Environmental Modelling and Software}, \emph{108}(Dec), 61--66. \url{https://doi.org/10.1016/j.envsoft.2018.07.007}
+
+\leavevmode\hypertarget{ref-Bien2015}{}%
+Bien, D. P., \& Dubuque, T. J. (2015). Considerations for late stage ACL rehabilitation and return to sport to limit re-injury risk and maximize athletic performance. \emph{International Journal of Sports Physical Therapy}, \emph{10}(2), 256--271. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/25883874}
+
+\leavevmode\hypertarget{ref-Billman2013}{}%
+Billman, G. E. (2013). The LF/HF ratio does not accurately measure cardiac sympatho-vagal balance. \emph{Frontiers in Physiology}, \emph{4}, 26. \url{https://doi.org/10.3389/fphys.2013.00026}
+
+\leavevmode\hypertarget{ref-Birkett2019}{}%
+Birkett, S. T., Nichols, S., Sawrey, R., Gleadall-Siddall, D., McGregor, G., \& Ingle, L. (2019). The effects of low-volume high-intensity interval training and circuit training on maximal oxygen uptake. \emph{Sport Sciences for Health}, \emph{15}(2), 443--451. \url{https://doi.org/10.1007/s11332-019-00552-2}
+
+\leavevmode\hypertarget{ref-Bittencourt2016}{}%
+Bittencourt, N. F. N., Meeuwisse, W. H., Mendonça, L. D., Nettel-Aguirre, A., Ocarino, J. M., \& Fonseca, S. T. (2016). Complex systems approach for sports injuries: Moving from risk factor identification to injury pattern recognition - narrative review and new concept. \emph{British Journal of Sports Medicine}, \emph{50}(21), 1309--1314. \url{https://doi.org/10.1136/bjsports-2015-095850}
+
+\leavevmode\hypertarget{ref-Bittl2017}{}%
+Bittl, J. A., \& He, Y. (2017). Bayesian Analysis: A Practical Approach to Interpret Clinical Trials and Create Clinical Practice Guidelines. \emph{Circulation: Cardiovascular Quality and Outcomes}, \emph{10}(8), 1--11. \url{https://doi.org/10.1161/CIRCOUTCOMES.117.003563}
+
+\leavevmode\hypertarget{ref-R-broom.mixed}{}%
+Bolker, B., \& Robinson, D. (2019). \emph{Broom.mixed: Tidying methods for mixed models}. Retrieved from \url{https://CRAN.R-project.org/package=broom.mixed}
+
+\leavevmode\hypertarget{ref-Borresen2009}{}%
+Borresen, J., \& Lambert, M. (2009). The quantification of training load, the training response and the effect on performance. \emph{Sports Medicine}, \emph{39}(9), 779--795. \url{https://doi.org/10.2165/11317780-000000000-00000}
+
+\leavevmode\hypertarget{ref-Brachman2017}{}%
+Brachman, A., Kamieniarz, A., Michalska, J., Pawłowski, M., Słomka, K. J., \& Juras, G. (2017). Balance training programs in athletes -- A systematic review. \emph{Journal of Human Kinetics}, \emph{58}(1), 45--64. \url{https://doi.org/10.1515/hukin-2017-0088}
+
+\leavevmode\hypertarget{ref-Brewer2012}{}%
+Brewer, B. W. (2012). Psychology of sport injury rehabilitation. In G. Tenenbaum \& R. C. Eklund (Eds.), \emph{Handbook of sport psychology} (3rd ed., pp. 404--424). Hoboken, NJ, USA: Wiley. \url{https://doi.org/10.1002/9781118270011.ch18}
+
+\leavevmode\hypertarget{ref-Brownlee2005}{}%
+Brownlee, K. K., Moore, A. W., \& Hackney, A. C. (2005). Relationship between circulating cortisol and testosterone: Influence of physical exercise. \emph{Journal of Sports Science and Medicine}, \emph{4}(1), 76--83. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/24431964}
+
+\leavevmode\hypertarget{ref-Buekers2017}{}%
+Buekers, M., Ibáñez-Gijón, J., Morice, A. H. P., Rao, G., Mascret, N., Laurin, J., \& Montagne, G. (2017). Interdisciplinary research: A promising approach to investigate elite performance in sports. \emph{Quest}, \emph{69}(1), 65--79. \url{https://doi.org/10.1080/00336297.2016.1152982}
+
+\leavevmode\hypertarget{ref-Bueno2018}{}%
+Bueno, A. M., Pilgaard, M., Hulme, A., Forsberg, P., Ramskov, D., Damsted, C., \& Nielsen, R. O. (2018). Injury prevalence across sports: A descriptive analysis on a representative sample of the Danish population. \emph{Injury Epidemiology}, \emph{5}(1), 1--8. \url{https://doi.org/10.1186/s40621-018-0136-0}
+
+\leavevmode\hypertarget{ref-Burwitz1994}{}%
+Burwitz, L., Moore, P. M., \& Wilkinson, D. M. (1994). Future directions for performance‐related sports science research: An interdisciplinary approach. \emph{Journal of Sports Sciences}, \emph{12}(1), 93--109. \url{https://doi.org/10.1080/02640419408732159}
+
+\leavevmode\hypertarget{ref-Butler2003}{}%
+Butler, R. J., Crowell, H. P., \& Davis, I. M. C. (2003). Lower extremity stiffness: Implications for performance and injury. \emph{Clinical Biomechanics}, \emph{18}(6), 511--517. \url{https://doi.org/10.1016/S0268-0033(03)00071-8}
+
+\leavevmode\hypertarget{ref-Burkner2017a}{}%
+Bürkner, P. C. (2017). brms: An R package for Bayesian multilevel models using Stan. \emph{Journal of Statistical Software}, \emph{80}(1). \url{https://doi.org/10.18637/jss.v080.i01}
+
+\leavevmode\hypertarget{ref-R-brms_a}{}%
+Bürkner, P.-C. (2017). brms: An R package for Bayesian multilevel models using Stan. \emph{Journal of Statistical Software}, \emph{80}(1), 1--28. \url{https://doi.org/10.18637/jss.v080.i01}
+
+\leavevmode\hypertarget{ref-R-brms_b}{}%
+Bürkner, P.-C. (2018). Advanced Bayesian multilevel modeling with the R package brms. \emph{The R Journal}, \emph{10}(1), 395--411. \url{https://doi.org/10.32614/RJ-2018-017}
+
+\leavevmode\hypertarget{ref-Bzdok2018}{}%
+Bzdok, D., Altman, N., \& Krzywinski, M. (2018). Points of significance: Statistics versus machine learning. \emph{Nature Methods}, \emph{15}(4), 233--234. \url{https://doi.org/10.1038/nmeth.4642}
+
+\leavevmode\hypertarget{ref-Caminal2018}{}%
+Caminal, P., Sola, F., Gomis, P., Guasch, E., Perera, A., Soriano, N., \& Mont, L. (2018). Validity of the Polar V800 monitor for measuring heart rate variability in mountain running route conditions. \emph{European Journal of Applied Physiology}, \emph{118}(3), 669--677. \url{https://doi.org/10.1007/s00421-018-3808-0}
+
+\leavevmode\hypertarget{ref-Carpenter2017}{}%
+Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., \ldots{} Riddell, A. (2017). Stan: A Probabilistic Programming Language. \emph{Journal of Statistical Software}, \emph{76}(1), 1--32. \url{https://doi.org/10.18637/jss.v076.i01}
+
+\leavevmode\hypertarget{ref-Chalmers2014}{}%
+Chalmers, J. A., Quintana, D. S., Abbott, M. J.-A., \& Kemp, A. H. (2014). Anxiety disorders are associated with reduced heart rate variability: A meta-analysis. \emph{Frontiers in Psychiatry}, \emph{5}, 80. \url{https://doi.org/10.3389/fpsyt.2014.00080}
+
+\leavevmode\hypertarget{ref-Chen2012}{}%
+Chen, S. H., \& Pollino, C. A. (2012). Good practice in Bayesian network modelling. \emph{Environmental Modelling and Software}, \emph{37}, 134--145. \url{https://doi.org/10.1016/j.envsoft.2012.03.012}
+
+\leavevmode\hypertarget{ref-Chrousos2009}{}%
+Chrousos, G. P. (2009). Stress and disorders of the stress system. \emph{Nature Reviews Endocrinology}, \emph{5}(7), 374--381. \url{https://doi.org/10.1038/nrendo.2009.106}
+
+\leavevmode\hypertarget{ref-Chuang2013}{}%
+Chuang, L. L., Lin, K. C., Wu, C. Y., Chang, C. W., Chen, H. C., Yin, H. P., \& Wang, L. (2013). Relative and absolute reliabilities of the myotonometric measurements of hemiparetic arms in patients with stroke. \emph{Archives of Physical Medicine and Rehabilitation}, \emph{94}(3), 459--466. \url{https://doi.org/10.1016/j.apmr.2012.08.212}
+
+\leavevmode\hypertarget{ref-Chuang2012}{}%
+Chuang, L. L., Wu, C. Y., \& Lin, K. C. (2012). Reliability, validity, and responsiveness of myotonometric measurement of muscle tone, elasticity, and stiffness in patients with stroke. \emph{Archives of Physical Medicine and Rehabilitation}, \emph{93}(3), 532--540. \url{https://doi.org/10.1016/j.apmr.2011.09.014}
+
+\leavevmode\hypertarget{ref-VanCingel2017}{}%
+Cingel, R. E. H. van, Hoogeboom, T. J., Melick, N. van, Meddeler, B. M., \& Nijhuis-van der Sanden, M. W. G. (2017). How to determine leg dominance: The agreement between self-reported and observed performance in healthy adults. \emph{Plos One}, \emph{12}(12), 1--9. \url{https://doi.org/10.1371/journal.pone.0189876}
+
+\leavevmode\hypertarget{ref-Clement2013}{}%
+Clement, D., Granquist, M. D., \& Arvinen-Barrow, M. M. (2013). Psychosocial aspects of athletic injuries as perceived by athletic trainers. \emph{Journal of Athletic Training}, \emph{48}(4), 512--521. \url{https://doi.org/10.4085/1062-6050-48.3.21}
+
+\leavevmode\hypertarget{ref-Coco2015}{}%
+Coco, M., Fiore, A. S., Perciavalle, V., Maci, T., Petralia, M. C., \& Perciavalle, V. (2015). Stress exposure and postural control in young females. \emph{Molecular Medicine Reports}, \emph{11}(3), 2135--2140. \url{https://doi.org/10.3892/mmr.2014.2898}
+
+\leavevmode\hypertarget{ref-Cormack2008}{}%
+Cormack, S. J., Newton, R. U., McGuigan, M. R., \& Cormie, P. (2008). Neuromuscular and endocrine responses of elite players during an Australian rules football season. \emph{International Journal of Sports Physiology and Performance}, \emph{3}(4), 439--453. \url{https://doi.org/10.1123/ijspp.3.4.439}
+
+\leavevmode\hypertarget{ref-Corr2008}{}%
+Corr, P. J. (2008). \emph{The Reinforcement Sensitivity Theory of Personality}. Cambridge: Cambridge University Press. \url{https://doi.org/10.1017/CBO9780511819384}
+
+\leavevmode\hypertarget{ref-Corr2013}{}%
+Corr, P. J. (2013). Approach and avoidance behaviour: Multiple systems and their interactions. \emph{Emotion Review}, \emph{5}(3), 285--290. \url{https://doi.org/10.1177/1754073913477507}
+
+\leavevmode\hypertarget{ref-Corr2016a}{}%
+Corr, P. J. (2016). Reinforcement Sensitivity Theory of Personality Questionnaires: Structural survey with recommendations. \emph{Personality and Individual Differences}, \emph{89}, 60--64. \url{https://doi.org/10.1016/j.paid.2015.09.045}
+
+\leavevmode\hypertarget{ref-Corr2016c}{}%
+Corr, P. J., \& Cooper, A. J. (2016). The reinforcement sensitivity theory of personality questionnaire (RST-PQ): Development and validation. \emph{Psychological Assessment}, \emph{28}(11), 1427--1440. \url{https://doi.org/10.1037/pas0000273}
+
+\leavevmode\hypertarget{ref-Corr2016b}{}%
+Corr, P. J., McNaughton, N., Wilson, M. R., Hutchison, A., Burch, G., \& Poropat, A. (2016). Neuroscience of motivation and organizational behavior: Putting the reinforcement sensitivity theory (RST) to work. \emph{Advances in Motivation and Achievement}, \emph{19}, 65--92. \url{https://doi.org/10.1108/S0749-742320160000019010}
+
+\leavevmode\hypertarget{ref-Craven2010}{}%
+Craven, B. C., \& Morris, A. R. (2010). Modified Ashworth scale reliability for measurement of lower extremity spasticity among patients with SCI. \emph{Spinal Cord}, \emph{48}(3), 207--213. \url{https://doi.org/10.1038/sc.2009.107}
+
+\leavevmode\hypertarget{ref-Cryan1983}{}%
+Cryan, P. D., \& Alles, W. F. (1983). The relationship between stress and college football injuries. \emph{The Journal of Sports Medicine and Physical Fitness}, \emph{23}(1), 52--58. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/6876787}
+
+\leavevmode\hypertarget{ref-Cumps2008a}{}%
+Cumps, E., Verhagen, E., Armenians, L., \& Meeusen, R. (2008). Injury rate and socioeconomic costs resulting from sports injuries in Flanders: Data derived from sports insurance statistics 2003. \emph{British Journal of Sports Medicine}, \emph{42}(9), 767--772. \url{https://doi.org/10.1136/bjsm.2007.037937}
+
+\leavevmode\hypertarget{ref-Mauss2014}{}%
+Daniel, M., Li, J., Schmidt, B., Angerer, P., \& Jarczok, M. N. (2014). Measuring allostatic load in the workforce: A systematic review. \emph{Industrial Health}, \emph{53}(1), 5--20. \url{https://doi.org/10.2486/indhealth.2014-0122}
+
+\leavevmode\hypertarget{ref-Denver2007}{}%
+Denver, J. W., Reed, S. F., \& Porges, S. W. (2007). Methodological issues in the quantification of respiratory sinus arrhythmia. \emph{Biological Psychology}, \emph{74}(2), 286--294. \url{https://doi.org/10.1016/j.biopsycho.2005.09.005}
+
+\leavevmode\hypertarget{ref-Depaoli2017}{}%
+Depaoli, S., \& Schoot, R. van de. (2017). Improving transparency and replication in Bayesian statistics: The WAMBS-checklist. \emph{Psychological Methods}, \emph{22}(2), 240--261. \url{https://doi.org/10.1037/met0000065}
+
+\leavevmode\hypertarget{ref-Devantier2011}{}%
+Devantier, C. (2011). Psychological predictors of injury among professional soccer players. \emph{Sport Science Review}, \emph{20}(5-6), 5--36. \url{https://doi.org/10.2478/v10237-011-0062-3}
+
+\leavevmode\hypertarget{ref-R-qwraps2}{}%
+DeWitt, P. (2019). \emph{Qwraps2: Quick wraps 2}. Retrieved from \url{https://CRAN.R-project.org/package=qwraps2}
+
+\leavevmode\hypertarget{ref-Dijkstra2014}{}%
+Dijkstra, H. P., Pollock, N., Chakraverty, R., \& Alonso, J. M. (2014). Managing the health of the elite athlete: A new integrated performance health management and coaching model. \emph{British Journal of Sports Medicine}, \emph{48}(7), 523--531. \url{https://doi.org/10.1136/bjsports-2013-093222}
+
+\leavevmode\hypertarget{ref-Dingenen2016}{}%
+Dingenen, B., Malfait, B., Nijs, S., Peers, K. H. E., Vereecken, S., Verschueren, S. M. P., \ldots{} Staes, F. F. (2016). Postural stability during single-leg stance: A preliminary evaluation of noncontact lower extremity injury risk. \emph{Journal of Orthopaedic and Sports Physical Therapy}, \emph{46}(8), 650--657. \url{https://doi.org/10.2519/jospt.2016.6278}
+
+\leavevmode\hypertarget{ref-Dishman2000}{}%
+Dishman, R. K., Nakamura, Y., Garcia, M. E., Thompson, R. W., Dunn, A. L., \& Blair, S. N. (2000). Heart rate variability, trait anxiety, and perceived stress among physically fit men and women. \emph{International Journal of Psychophysiology}, \emph{37}(2), 121--133. \url{https://doi.org/10.1016/S0167-8760(00)00085-4}
+
+\leavevmode\hypertarget{ref-Djaoui2017}{}%
+Djaoui, L., Haddad, M., Chamari, K., \& Dellal, A. (2017). Monitoring training load and fatigue in soccer players with physiological markers. \emph{Physiology and Behavior}, \emph{181}(1), 86--94. \url{https://doi.org/10.1016/j.physbeh.2017.09.004}
+
+\leavevmode\hypertarget{ref-Dong2016a}{}%
+Dong, J. G. (2016). The role of heart rate variability in sports physiology (Review). \emph{Experimental and Therapeutic Medicine}, \emph{11}(5), 1531--1536. \url{https://doi.org/10.3892/etm.2016.3104}
+
+\leavevmode\hypertarget{ref-Doumas2018}{}%
+Doumas, M., Morsanyi, K., \& Young, W. R. (2018). Cognitively and socially induced stress affects postural control. \emph{Experimental Brain Research}, \emph{236}(1), 305--314. \url{https://doi.org/10.1007/s00221-017-5128-8}
+
+\leavevmode\hypertarget{ref-R-Rcpp_b}{}%
+Eddelbuettel, D., \& Balamuta, J. J. (2017). Extending extitR with extitC++: A Brief Introduction to extitRcpp. \emph{PeerJ Preprints}, \emph{5}, e3188v1. \url{https://doi.org/10.7287/peerj.preprints.3188v1}
+
+\leavevmode\hypertarget{ref-R-Rcpp_a}{}%
+Eddelbuettel, D., \& François, R. (2011). Rcpp: Seamless R and C++ integration. \emph{Journal of Statistical Software}, \emph{40}(8), 1--18. \url{https://doi.org/10.18637/jss.v040.i08}
+
+\leavevmode\hypertarget{ref-Edwards2018}{}%
+Edwards, J. P., Walsh, N. P., Diment, P. C., \& Roberts, R. (2018). Anxiety and perceived psychological stress play an important role in the immune response after exercise. \emph{Exercise Immunology Review}, \emph{24}, 26--34.
+
+\leavevmode\hypertarget{ref-Efron1993}{}%
+Efron, B., \& Tibshirani, R. J. (1994). \emph{An introduction to the bootstrap}. New York: Chapman \& Hall. Retrieved from \url{https://www.crcpress.com/An-Introduction-to-the-Bootstrap/Efron-Tibshirani/p/book/9780412042317}
+
+\leavevmode\hypertarget{ref-Enders2003}{}%
+Enders, C. K. (2003). Using the expectation maximization algorithm to estimate coefficient alpha for scales with item-level missing data. \emph{Psychological Methods}, \emph{8}(3), 322--337. \url{https://doi.org/10.1037/1082-989X.8.3.322}
+
+\leavevmode\hypertarget{ref-Esco2014}{}%
+Esco, M. R., \& Flatt, A. A. (2014). Ultra-short-term heart rate variability indexes at rest and post-exercise in athletes: Evaluating the agreement with accepted recommendations. \emph{Journal of Sports Science and Medicine}, \emph{13}(3), 535--541.
+
+\leavevmode\hypertarget{ref-Esco2018}{}%
+Esco, M. R., Williford, H. N., Flatt, A. A., Freeborn, T. J., \& Nakamura, F. Y. (2018). Ultra-shortened time-domain HRV parameters at rest and following exercise in athletes: An alternative to frequency computation of sympathovagal balance. \emph{European Journal of Applied Physiology}, \emph{118}(1), 175--184. \url{https://doi.org/10.1007/s00421-017-3759-x}
+
+\leavevmode\hypertarget{ref-Eysenck2007}{}%
+Eysenck, M. W., Derakshan, N., Santos, R., \& Calvo, M. G. (2007). Anxiety and cognitive performance: Attentional control theory. \emph{Emotion}, \emph{7}(2), 336--353. \url{https://doi.org/10.1037/1528-3542.7.2.336}
+
+\leavevmode\hypertarget{ref-Fawkner1999}{}%
+Fawkner, H. J., McMurrary, N. E., \& Summers, J. J. (1999). Athletic injury and minor life events: A prospective study. \emph{Journal of Science and Medicine in Sport}, \emph{2}(2), 117--124. \url{https://doi.org/10.1016/S1440-2440(99)80191-1}
+
+\leavevmode\hypertarget{ref-Fletcher2010}{}%
+Fletcher, D., \& Scott, M. (2010). Psychological stress in sports coaches: A review of concepts, research, and practice. \emph{Journal of Sports Sciences}, \emph{28}(2), 127--137. \url{https://doi.org/10.1080/02640410903406208}
+
+\leavevmode\hypertarget{ref-Fornell1981}{}%
+Fornell, C., \& Larcker, D. F. (1981). Evaluating structural equation models with unobservable variables and measurement error. \emph{Journal of Marketing Research}, \emph{18}(1), 39--50. \url{https://doi.org/10.2307/3151312}
+
+\leavevmode\hypertarget{ref-Freedson2009}{}%
+Freedson, P. (2009). Interdisciplinary research funding: Reaching outside the boundaries of kinesiology. \emph{Quest}, \emph{61}(1), 19--24. \url{https://doi.org/10.1080/00336297.2009.10483597}
+
+\leavevmode\hypertarget{ref-Fulton2014}{}%
+Fulton, J., Wright, K., Kelly, M., Zebrosky, B., Zanis, M., Drvol, C., \& Butler, R. (2014). Injury risk is altered by previous injury: A systematic review of the literature and presentation of causative neuromuscular factors. \emph{International Journal of Sports Physical Therapy}, \emph{9}(5), 583--595. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/25328821}
+
+\leavevmode\hypertarget{ref-Fuster-Parra2017}{}%
+Fuster-Parra, P., Vidal-Conti, J., Borràs, P. A., \& Palou, P. (2017). Bayesian networks to identify statistical dependencies. A case study of Spanish university students' habits. \emph{Informatics for Health and Social Care}, \emph{42}(2), 166--179. \url{https://doi.org/10.1080/17538157.2016.1178117}
+
+\leavevmode\hypertarget{ref-Gabbett2016}{}%
+Gabbett, T. J. (2016). The training-injury prevention paradox: should athletes be training smarter and harder? \emph{British Journal of Sports Medicine}, \emph{50}(5), 273--280. \url{https://doi.org/10.1136/bjsports-2015-095788}
+
+\leavevmode\hypertarget{ref-Gabry2018}{}%
+Gabry, J. (2018). shinystan: Interactive, visual and numerical diagnostics and posterior analysis for Bayesian models. Retrieved from \url{https://cran.r-project.org/package=shinystan}
+
+\leavevmode\hypertarget{ref-Galambos2005}{}%
+Galambos, S. A., Terry, P. C., Moyle, G. M., \& Locke, S. A. (2005). Psychological predictors of injury among elite athletes. \emph{British Journal of Sports Medicine}, \emph{39}(6), 351--354. \url{https://doi.org/10.1136/bjsm.2005.018440}
+
+\leavevmode\hypertarget{ref-Ganzel2010}{}%
+Ganzel, B. L., Morris, P. A., \& Wethington, E. (2010). Allostasis and the human brain: Integrating models of stress from the social and life sciences. \emph{Psychological Review}, \emph{117}(1), 134--174. \url{https://doi.org/10.1037/a0017773}
+
+\leavevmode\hypertarget{ref-GarciaMartinez2017}{}%
+García Martínez, C. A., Otero Quintana, A., Vila, X. A., Lado Touriño, M. J., Rodríguez-Liñares, L., Rodríguez Presedo, J. M., \& Méndez Penín, A. J. (2017). \emph{Heart rate variability analysis with the R package RHRV}. Springer. \url{https://doi.org/10.1007/978-3-319-65355-6}
+
+\leavevmode\hypertarget{ref-Gelman2006a}{}%
+Gelman, A. (2006). Prior distributions for variance parameters in hierarchical models. \emph{Bayesian Analysis}, \emph{1}(3), 515--533. \url{https://doi.org/10.1214/06-BA117A}
+
+\leavevmode\hypertarget{ref-Gelman2008a}{}%
+Gelman, A. (2008a). Objections to Bayesian statistics. \emph{Bayesian Analysis}, \emph{3}(3), 445--450. \url{https://doi.org/10.1214/08-BA318}
+
+\leavevmode\hypertarget{ref-Gelman2008}{}%
+Gelman, A. (2008b). Rejoinder. \emph{Bayesian Analysis}, \emph{3}(3), 467--478. \url{https://doi.org/10.1214/08-BA318REJ}
+
+\leavevmode\hypertarget{ref-Gelman1998}{}%
+Gelman, A., \& Brooks, S. P. (1998). General methods for monitoring convergence of iterative simulations. \emph{Journal of Computational and Graphical Statistics}, \emph{7}(4), 434--455.
+
+\leavevmode\hypertarget{ref-Gelman2013}{}%
+Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., \& Rubin, D. B. (2013). \emph{Bayesian Data Analysis} (3rd ed.). Boca Raton: Chapman; Hall/CRC.
+
+\leavevmode\hypertarget{ref-Gelman2013a}{}%
+Gelman, A., \& Shalizi, C. R. (2013). Philosophy and the practice of Bayesian statistics. \emph{British Journal of Mathematical and Statistical Psychology}, \emph{66}(1), 8--38. \url{https://doi.org/10.1111/j.2044-8317.2011.02037.x}
+
+\leavevmode\hypertarget{ref-Gennisson2010}{}%
+Gennisson, J. L., Deffieux, T., Macé, E., Montaldo, G., Fink, M., \& Tanter, M. (2010). Viscoelastic and anisotropic mechanical properties of in vivo muscle tissue assessed by supersonic shear imaging. \emph{Ultrasound in Medicine and Biology}, \emph{36}(5), 789--801. \url{https://doi.org/10.1016/j.ultrasmedbio.2010.02.013}
+
+\leavevmode\hypertarget{ref-R-graph}{}%
+Gentleman, R., Whalen, E., Huber, W., \& Falcon, S. (2019). \emph{Graph: Graph: A package to handle graph data structures}.
+
+\leavevmode\hypertarget{ref-Gerber2012}{}%
+Gerber, M., Brand, S., Lindwall, M., Elliot, C., Kalak, N., Herrmann, C., \ldots{} Jonsdottir, I. H. (2012). Concerns regarding hair cortisol as a biomarker of chronic stress in exercise and sport science. \emph{Journal of Sports Science and Medicine}, \emph{11}(4), 571--581. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/24150065}
+
+\leavevmode\hypertarget{ref-Gervasi2017}{}%
+Gervasi, M., Sisti, D., Amatori, S., Andreazza, M., Benelli, P., Sestili, P., \ldots{} Calavalle, A. R. (2017). Muscular viscoelastic characteristics of athletes participating in the European Master Indoor Athletics Championship. \emph{European Journal of Applied Physiology}, \emph{117}(8), 1739--1746. \url{https://doi.org/10.1007/s00421-017-3668-z}
+
+\leavevmode\hypertarget{ref-Giles2016}{}%
+Giles, D., Draper, N., \& Neil, W. (2016). Validity of the Polar V800 heart rate monitor to measure RR intervals at rest. \emph{European Journal of Applied Physiology}, \emph{116}(3), 563--571. \url{https://doi.org/10.1007/s00421-015-3303-9}
+
+\leavevmode\hypertarget{ref-Gisselman2016}{}%
+Gisselman, A. S., Baxter, G. D., Wright, A., Hegedus, E., \& Tumilty, S. (2016). Musculoskeletal overuse injuries and heart rate variability: Is there a link? \emph{Medical Hypotheses}, \emph{87}, 1--7. \url{https://doi.org/10.1016/j.mehy.2015.12.003}
+
+\leavevmode\hypertarget{ref-Raudenbush2002}{}%
+Goldstein, H., Bryk, A. S., \& Raudenbush, S. W. (2006). Hierarchical linear models: Applications and data analysis methods. \emph{Journal of the American Statistical Association}, \emph{88}(421), 386. \url{https://doi.org/10.2307/2290750}
+
+\leavevmode\hypertarget{ref-Gordon2016}{}%
+Gordon, C.-M., Andrasik, F., Schleip, R., Birbaumer, N., \& Rea, M. (2016). Myofascial triggerpoint release (MTR) for treating chronic shoulder pain: A novel approach. \emph{Journal of Bodywork and Movement Therapies}, \emph{20}(3), 614--622. \url{https://doi.org/10.1016/j.jbmt.2016.01.009}
+
+\leavevmode\hypertarget{ref-Gozansky2005}{}%
+Gozansky, W. S., Lynn, J. S., Laudenslager, M. L., \& Kohrt, W. M. (2005). Salivary cortisol determined by enzyme immunoassay is preferable to serum total cortisol for assessment of dynamic hypothalamic-pituitary-adrenal axis activity. \emph{Clinical Endocrinology}, \emph{63}(3), 336--341. \url{https://doi.org/10.1111/j.1365-2265.2005.02349.x}
+
+\leavevmode\hypertarget{ref-Gray1982a}{}%
+Gray, J. A. (1982). Précis of the neuropsychology of anxiety: An enquiry into the functions of the septo-hippocampal system. \emph{Behavioral and Brain Sciences}, \emph{5}(3), 469--484. \url{https://doi.org/10.1017/S0140525X00013066}
+
+\leavevmode\hypertarget{ref-Gray2000}{}%
+Gray, J. A., \& McNaughton, N. (2000). \emph{The neuropsychology of anxiety: An enquiry into the functions of the septo-hippocampal system}. Oxford: Oxford University Press. \url{https://doi.org/10.1017/S0140525X00013066}
+
+\leavevmode\hypertarget{ref-Groschl2008}{}%
+Gröschl, M., Read, G. F., Hughes, I. A., \& Riad-Fahmy, D. (2008). Current status of salivary hormone analysis. \emph{Clinical Chemistry}, \emph{54}(11), 1759--1769. \url{https://doi.org/10.1373/clinchem.2008.108910}
+
+\leavevmode\hypertarget{ref-Gucci2016}{}%
+Gucciardi, D., \& Zyphur, M. (2016). Exploratory structural equation modelling and Bayesian estimation. In N. Ntoumanis \& N. Myers (Eds.), \emph{An introduction to intermediate and advanced analyses for sport and exercise scientists} (pp. 172--194). London: Wiley.
+
+\leavevmode\hypertarget{ref-Gunnoe2001}{}%
+Gunnoe, A. J., Horodyski, M., Tennant, L. K., \& Murphey, M. (2001). The effect of life events on incidence of injury in high school football players. \emph{Journal of Athletic Training}, \emph{36}(2), 150--155. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/12937456}
+
+\leavevmode\hypertarget{ref-Hahn1999}{}%
+Hahn, T., Foldspang, A., Vestergaard, E., \& Ingemann-Hansen, T. (1999). One-leg standing balance and sports activity. \emph{Scandinavian Journal of Medicine and Science in Sport}, \emph{9}(13), 15--18. \url{https://doi.org/10.1111/j.1600-0838.1999.tb00201.x}
+
+\leavevmode\hypertarget{ref-Hanoch2004}{}%
+Hanoch, Y., \& Vitouch, O. (2004). When less is more: Information, emotional arousal and the ecological reframing of the Yerkes-Dodson law. \emph{Theory \& Psychology}, \emph{14}(4), 427--452. \url{https://doi.org/10.1177/0959354304044918}
+
+\leavevmode\hypertarget{ref-R-Rgraphviz}{}%
+Hansen, K. D., Gentry, J., Long, L., Gentleman, R., Falcon, S., Hahne, F., \& Sarkar, D. (2019). \emph{Rgraphviz: Provides plotting capabilities for r graph objects}.
+
+\leavevmode\hypertarget{ref-Hardy1992}{}%
+Hardy, L. (1992). Psychological stress, performance, and injury in sport. \emph{British Medical Bulletin}, \emph{48}(2), 615--629. \url{https://doi.org/10.1093/oxfordjournals.bmb.a072567}
+
+\leavevmode\hypertarget{ref-Hardy2014}{}%
+Hardy, L., Bell, J., \& Beattie, S. (2014). A neuropsychological model of mentally tough behavior. \emph{Journal of Personality}, \emph{82}(1), 69--81. \url{https://doi.org/10.1111/jopy.12034}
+
+\leavevmode\hypertarget{ref-Hashiguchi2009}{}%
+Hashiguchi, N., Kaji, Y., Kozaki, T., Tochihara, Y., \& Yasukouchi, A. (2009). Effects of saliva collection using cotton swab on cortisol enzyme immunoassay. \emph{European Journal of Applied Physiology}, \emph{107}(6), 743--746. \url{https://doi.org/10.1007/s00421-009-1178-3}
+
+\leavevmode\hypertarget{ref-Hagglund2006}{}%
+Hägglund, M., Waldén, M., \& Ekstrand, J. (2006). Previous injury as a risk factor for injury in elite football: A prospective study over two consecutive seasons. \emph{British Journal of Sports Medicine}, \emph{40}(9), 767--772. \url{https://doi.org/10.1136/bjsm.2006.026609}
+
+\leavevmode\hypertarget{ref-Heathers2014}{}%
+Heathers, J. A. J. (2014). Everything Hertz: Methodological issues in short-term frequency-domain HRV. \emph{Frontiers in Physiology}, \emph{5}, 1--15. \url{https://doi.org/10.3389/fphys.2014.00177}
+
+\leavevmode\hypertarget{ref-Heckerman1995}{}%
+Heckerman, D., Geiger, D., \& Chickering, D. M. (1995). Learning Bayesian networks: The combination of knowledge and statistical data. \emph{Machine Learning}, \emph{20}(3), 197--243. \url{https://doi.org/10.1023/A:1022623210503}
+
+\leavevmode\hypertarget{ref-Hedayatpour2015}{}%
+Hedayatpour, N., \& Falla, D. (2015). Physiological and neural adaptations to eccentric exercise: Mechanisms and considerations for training. \emph{BioMed Research International}, 1--7. \url{https://doi.org/10.1155/2015/193741}
+
+\leavevmode\hypertarget{ref-Heino2018}{}%
+Heino, M. T. J., Vuorre, M., \& Hankonen, N. (2018). Bayesian evaluation of behavior change interventions: A brief introduction and a practical example. \emph{Health Psychology and Behavioral Medicine}, \emph{6}(1), 49--78. \url{https://doi.org/10.1080/21642850.2018.1428102}
+
+\leavevmode\hypertarget{ref-R-purrr}{}%
+Henry, L., \& Wickham, H. (2019). \emph{Purrr: Functional programming tools}. Retrieved from \url{https://CRAN.R-project.org/package=purrr}
+
+\leavevmode\hypertarget{ref-Hermens2000}{}%
+Hermens, H. J., Freriks, B., Disselhorst-Klug, C., \& Rau, G. (2000). Development of recommendations for SEMG sensors and sensor placement procedures. \emph{Journal of Electromyography and Kinesiology}, \emph{10}(5), 361--374. \url{https://doi.org/10.1016/S1050-6411(00)00027-4}
+
+\leavevmode\hypertarget{ref-Hertwig2005}{}%
+Hertwig, R., \& Todd, P. M. (2005). More is not always better: The benefits of cognitive limits. In D. Hardman \& L. Macchi (Eds.), \emph{Thinking: Psychological perspectives on reasoning, judgment and decision making} (pp. 213--231). Chichester, UK: Wiley. \url{https://doi.org/10.1002/047001332X.ch11}
+
+\leavevmode\hypertarget{ref-Hill2008}{}%
+Hill, E. E., Zack, E., Battaglini, C., Viru, M., Viru, A., \& Hackney, A. C. (2008). Exercise and circulating Cortisol levels: The intensity threshold effect. \emph{Journal of Endocrinological Investigation}, \emph{31}(7), 587--591. \url{https://doi.org/10.1007/BF03345606}
+
+\leavevmode\hypertarget{ref-Hill2009}{}%
+Hill, L. K., Siebenbrock, A., Sollers III, J. J., \& Thayer, J. F. (2009). Are all measures created equal? Heart rate variability and respiration. \emph{Biomedical Sciences Instrumentation}, \emph{45}, 71--76. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/19369742}
+
+\leavevmode\hypertarget{ref-Holland1995}{}%
+Holland, J. H. (1995). \emph{Hidden order: How adaptation builds complexity} (p. 185). Addison-Wesley. Retrieved from \url{https://dl.acm.org/citation.cfm?id=225764}
+
+\leavevmode\hypertarget{ref-Holmes1970}{}%
+Holmes, T. H. (1970). \emph{Psychological screening in football injuries} (pp. 211--214). Washington, DC: National Academy of Sciences. \url{https://doi.org/10.17226/20983}
+
+\leavevmode\hypertarget{ref-Holmes1967}{}%
+Holmes, T. H., \& Rahe, R. H. (1967). The social readjustment rating scale. \emph{Journal of Psychosomatic Research}, \emph{11}(2), 213--218. \url{https://doi.org/10.1016/0022-3999(67)90010-4}
+
+\leavevmode\hypertarget{ref-Hrysomallis2011}{}%
+Hrysomallis, C. (2011). Balance ability and athletic performance. \emph{Sports Medicine}, \emph{41}(3), 221--232. \url{https://doi.org/10.2165/11538560-000000000-00000}
+
+\leavevmode\hypertarget{ref-Hsu2017}{}%
+Hsu, C. J., Meierbachtol, A., George, S. Z., \& Chmielewski, T. L. (2017). Fear of reinjury in athletes: Implications for rehabilitation. \emph{Sports Health}, \emph{9}(2), 162--167. \url{https://doi.org/10.1177/1941738116666813}
+
+\leavevmode\hypertarget{ref-Hu2011}{}%
+Hu, M. C., Pavlicova, M., \& Nunes, E. V. (2011). Zero-inflated and hurdle models of count data with extra zeros: Examples from an HIV-risk reduction intervention trial. \emph{American Journal of Drug and Alcohol Abuse}, \emph{37}(5), 367--375. \url{https://doi.org/10.3109/00952990.2011.597280}
+
+\leavevmode\hypertarget{ref-R-BiocGenerics}{}%
+Huber, W., Carey, J., V., Gentleman, R., \ldots{} M. (2015). Orchestrating high-throughput genomic analysis with Bioconductor. \emph{Nature Methods}, \emph{12}(2), 115--121. Retrieved from \url{http://www.nature.com/nmeth/journal/v12/n2/full/nmeth.3252.html}
+
+\leavevmode\hypertarget{ref-Hughes2014}{}%
+Hughes, G. (2014). A review of recent perspectives on biomechanical risk factors associated with anterior cruciate ligament injury. \emph{Research in Sports Medicine}, \emph{22}(2), 193--212. \url{https://doi.org/10.1080/15438627.2014.881821}
+
+\leavevmode\hypertarget{ref-Hulme2015}{}%
+Hulme, A., \& Finch, C. F. (2015). From monocausality to systems thinking: A complementary and alternative conceptual approach for better understanding the development and prevention of sports injury. \emph{Injury Epidemiology}, \emph{2}(1), 31. \url{https://doi.org/10.1186/s40621-015-0064-1}
+
+\leavevmode\hypertarget{ref-Hulme2018}{}%
+Hulme, A., Thompson, J., Nielsen, R. O., Read, G. J. M. M., \& Salmon, P. M. (2018). Towards a complex systems approach in sports injury research: Simulating running-related injury development with agent-based modelling. \emph{British Journal of Sports Medicine}, \emph{53}(9), 560--569. \url{https://doi.org/10.1136/bjsports-2017-098871}
+
+\leavevmode\hypertarget{ref-Hunt2009}{}%
+Hunt, T. N., Ferrara, M. S., Bornstein, R. A., \& Baumgartner, T. A. (2009). The reliability of the modified balance error scoring system. \emph{Clinical Journal of Sport Medicine}, \emph{19}(6), 471--475. \url{https://doi.org/10.1097/JSM.0b013e3181c12c7b}
+
+\leavevmode\hypertarget{ref-R-DiagrammeR}{}%
+Iannone, R. (2019). \emph{DiagrammeR: Graph/network visualization}. Retrieved from \url{https://CRAN.R-project.org/package=DiagrammeR}
+
+\leavevmode\hypertarget{ref-Iniesta2016}{}%
+Iniesta, R., Stahl, D., \& McGuffin, P. (2016). Machine learning, statistical learning and the future of biological research in psychiatry. \emph{Psychological Medicine}, \emph{46}(12), 2455--2465. \url{https://doi.org/10.1017/S0033291716001367}
+
+\leavevmode\hypertarget{ref-Ivarsson2010}{}%
+Ivarsson, A., \& Johnson, U. (2010). Psychological factors as predictors of injuries among senior soccer players. A prospective study. \emph{Journal of Sports Science and Medicine}, \emph{9}(2), 347--352. Retrieved from \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3761721/}
+
+\leavevmode\hypertarget{ref-Ivarsson2017}{}%
+Ivarsson, A., Johnson, U., Andersen, M. B., Tranaeus, U., Stenling, A., \& Lindwall, M. (2017). Psychosocial factors and sport injuries: Meta-analyses for prediction and prevention. \emph{Sports Medicine}, \emph{47}(2), 353--365. \url{https://doi.org/10.1007/s40279-016-0578-x}
+
+\leavevmode\hypertarget{ref-Ivarsson2014}{}%
+Ivarsson, A., Johnson, U., Lindwall, M., Gustafsson, H., \& Altemyr, M. (2014). Psychosocial stress as a predictor of injury in elite junior soccer: A latent growth curve analysis. \emph{Journal of Science and Medicine in Sport}, \emph{17}(4), 366--370. \url{https://doi.org/10.1016/j.jsams.2013.10.242}
+
+\leavevmode\hypertarget{ref-Jackson2009}{}%
+Jackson, C. J. (2009). Jackson-5 scales of revised Reinforcement Sensitivity Theory (r-RST) and their application to dysfunctional real world outcomes. \emph{Journal of Research in Personality}, \emph{43}(4), 556--569. \url{https://doi.org/10.1016/j.jrp.2009.02.007}
+
+\leavevmode\hypertarget{ref-Johnson2014}{}%
+Johnson, U., Tranaeus, U., \& Ivarsson, A. (2014). Current status and future challenges in psychological research of sport injury prediction and prevention: A methodological perspective. \emph{Revista de Psicologia Del Deporte}, \emph{23}(2), 401--409. Retrieved from \url{https://www.rpd-online.com/article/view/v23-n2-johnson-tranaeus-ivarsson}
+
+\leavevmode\hypertarget{ref-Johnston2000}{}%
+Johnston, L. H., \& Carroll, D. (2000). The psychological impact of injury: Effects of prior sport and exercise involvement. \emph{British Journal of Sports Medicine}, \emph{34}(6), 436--439. \url{https://doi.org/10.1136/bjsm.34.6.436}
+
+\leavevmode\hypertarget{ref-Junge2000}{}%
+Junge, A. (2000). The influence of psychological factors on sports injuries. Review of the literature. \emph{American Journal of Sports Medicine}, \emph{28}(5 Suppl.), 10--15. \url{https://doi.org/10.1177/28.suppl_5.s-10}
+
+\leavevmode\hypertarget{ref-Kalkhoven2018}{}%
+Kalkhoven, J. T., \& Watsford, M. L. (2017). The relationship between mechanical stiffness and athletic performance markers in sub-elite footballers. \emph{Journal of Sports Sciences}, \emph{36}(9), 1022--1029. \url{https://doi.org/10.1080/02640414.2017.1349921}
+
+\leavevmode\hypertarget{ref-Kean2006}{}%
+Kean, C. O., Behm, D. G., \& Young, W. B. (2006). Fixed foot balance training increases rectus femoris activation during landing and jump height in recreationally active women. \emph{Journal of Sports Science and Medicine}, \emph{5}(1), 138--148. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/24198691}
+
+\leavevmode\hypertarget{ref-Kelly2018}{}%
+Kelly, J. P., Koppenhaver, S. L., Michener, L. A., Proulx, L., Bisagni, F., \& Cleland, J. A. (2018). Characterization of tissue stiffness of the infraspinatus, erector spinae, and gastrocnemius muscle using ultrasound shear wave elastography and superficial mechanical deformation. \emph{Journal of Electromyography and Kinesiology}, \emph{38}, 73--80. \url{https://doi.org/10.1016/j.jelekin.2017.11.001}
+
+\leavevmode\hypertarget{ref-Kim2018}{}%
+Kim, H.-G., Cheon, E.-J., Bai, D.-S., Lee, Y. H., \& Koo, B.-H. (2018). Stress and heart rate variability: A meta-analysis and review of the literature. \emph{Psychiatry Investigation}, \emph{15}(3), 235--245. \url{https://doi.org/10.30773/pi.2017.08.17}
+
+\leavevmode\hypertarget{ref-Koller2009}{}%
+Koller, D., \& Friedman, N. (2009). \emph{Probabilistic graphical models: Principles and techniques - Adaptive computation and machine learning}. Cambridge, MA: The MIT Press. \url{https://doi.org/10.1017/CBO9781107415324.004}
+
+\leavevmode\hypertarget{ref-Kolt1996}{}%
+Kolt, G., \& Kirkby, R. (1996). Injury in Australian female competitive gymnasts: A psychological perspective. \emph{The Australian Journal of Physiotherapy}, \emph{42}(2), 121--126. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/11676643}
+
+\leavevmode\hypertarget{ref-Koo2016}{}%
+Koo, T. K., \& Li, M. Y. (2016). A guideline of selecting and reporting intraclass correlation coefficients for reliability research. \emph{Journal of Chiropractic Medicine}, \emph{15}(2), 155--163. \url{https://doi.org/10.1016/j.jcm.2016.02.012}
+
+\leavevmode\hypertarget{ref-Kraemer2009}{}%
+Kraemer, W., Denegar, C., \& Flanagan, S. (2009). Recovery from injury in sport: Considerations in the transition from medical care to performance care. \emph{Sports Health}, \emph{1}(5), 392--395. \url{https://doi.org/10.1177/1941738109343156}
+
+\leavevmode\hypertarget{ref-Kruschke2013}{}%
+Kruschke, J. K. (2013). Bayesian estimation supersedes the t test. \emph{Journal of Experimental Psychology: General}, \emph{142}(2), 573--588. \url{https://doi.org/10.1037/a0029146}
+
+\leavevmode\hypertarget{ref-Kucera2005}{}%
+Kucera, K. L., Marshall, S. W., Kirkendall, D. T., Marchak, P. M., \& Garrett, W. E. (2005). Injury history as a risk factor for incident injury in youth soccer. \emph{British Journal of Sports Medicine}, \emph{39}(7), 462--466. \url{https://doi.org/10.1136/bjsm.2004.013672}
+
+\leavevmode\hypertarget{ref-Kuhn2008}{}%
+Kuhn, M. C. from J. W., Weston, S., Williams, A., Keefer, C., \& Engelhardt, A. (2008). caret: Classification and Regression Training. \emph{Journal of Statistical Software}, \emph{28}(5). \url{https://doi.org/10.1053/j.sodo.2009.03.002}
+
+\leavevmode\hypertarget{ref-Kumar2001}{}%
+Kumar, S. (2001). Theories of musculoskeletal injury causation. \emph{Ergonomics}, \emph{44}(1), 17--47. \url{https://doi.org/10.1080/00140130120716}
+
+\leavevmode\hypertarget{ref-Laborde2017}{}%
+Laborde, S., Mosley, E., \& Thayer, J. F. (2017). Heart rate variability and cardiac vagal tone in psychophysiological research - Recommendations for experiment planning, data analysis, and data reporting. \emph{Frontiers in Psychology}, \emph{8}, 1--18. \url{https://doi.org/10.3389/fpsyg.2017.00213}
+
+\leavevmode\hypertarget{ref-Lacourpaille2012}{}%
+Lacourpaille, L., Hug, F., Bouillard, K., Hogrel, J. Y., \& Nordez, A. (2012). Supersonic shear imaging provides a reliable measurement of resting muscle shear elastic modulus. \emph{Physiological Measurement}, \emph{33}(3), 19--28. \url{https://doi.org/10.1088/0967-3334/33/3/N19}
+
+\leavevmode\hypertarget{ref-Lang2014}{}%
+Lang, K. M., Jorgensen, T. D., Moore, E. W. G., \& Little, T. D. (2013). On the joys of missing data. \emph{Journal of Pediatric Psychology}, \emph{39}(2), 151--162. \url{https://doi.org/10.1093/jpepsy/jst048}
+
+\leavevmode\hypertarget{ref-Lavallee1996}{}%
+Lavallée, L., \& Flint, F. (1996). The relationship of stress, competitive anxiety, mood state, and social support to athletic injury. \emph{Journal of Athletic Training}, \emph{31}(4), 296--299. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/16558413}
+
+\leavevmode\hypertarget{ref-Leddy1994}{}%
+Leddy, M. H., Lambert, M. J., \& Ogles, B. M. (1994). Psychological consequences of athletic injury among high-level competitors. \emph{Research Quarterly for Exercise and Sport}, \emph{65}(4), 347--354. \url{https://doi.org/10.1080/02701367.1994.10607639}
+
+\leavevmode\hypertarget{ref-Lee2017}{}%
+Lee, E. C., Fragala, M. S., Kavouras, S. A., Queen, R. M., Pryor, J. L., \& Casa, D. J. (2017). Biomarkers in sports and exercise: Tracking health, performance, and recovery in athletes. \emph{Journal of Strength and Conditioning Research}, \emph{31}(10), 2920--2937. \url{https://doi.org/10.1519/JSC.0000000000002122}
+
+\leavevmode\hypertarget{ref-Lima-Borges2018}{}%
+Lima-Borges, D. S., Martinez, P. F., Vanderlei, L. C. M., Barbosa, F. S. S. S., \& Oliveira-Junior, S. A. (2018). Autonomic modulations of heart rate variability are associated with sports injury incidence in sprint swimmers. \emph{Physician and Sports Medicine}, \emph{46}(3), 374--384. \url{https://doi.org/10.1080/00913847.2018.1450606}
+
+\leavevmode\hypertarget{ref-R-sjmisc}{}%
+Lüdecke, D. (2018). Sjmisc: Data and variable transformation functions. \emph{Journal of Open Source Software}, \emph{3}(26), 754. \url{https://doi.org/10.21105/joss.00754}
+
+\leavevmode\hypertarget{ref-Maddison2005}{}%
+Maddison, R., \& Prapavessis, H. (2005). A psychological approach to the prediction and prevention of athletic injury. \emph{Journal of Sport and Exercise Psychology}, \emph{27}(3), 289--310. \url{https://doi.org/10.1123/jsep.27.3.289}
+
+\leavevmode\hypertarget{ref-Malik1996}{}%
+Malik, M., Camm, A. J., Bigger, J. T., Breithardt, G., Cerutti, S., Cohen, R. J., \ldots{} Singer, D. H. (1996). Heart rate variability. Standards of measurement, physiological interpretation, and clinical use. \emph{European Heart Journal}, \emph{17}(3), 354--381. \url{https://doi.org/10.1093/oxfordjournals.eurheartj.a014868}
+
+\leavevmode\hypertarget{ref-Mangine2018}{}%
+Mangine, G., Van Dusseldorp, T., Feito, Y., Holmes, A., Serafini, P., Box, A., \& Gonzalez, A. (2018). Testosterone and cortisol responses to five high-intensity functional training competition workouts in recreationally active adults. \emph{Sports}, \emph{6}(3), 1--14. \url{https://doi.org/10.3390/sports6030062}
+
+\leavevmode\hypertarget{ref-Marsh2009}{}%
+Marsh, H. W., Muthén, B., Asparouhov, T., Lüdtke, O., Robitzsch, A., Morin, A. J. S., \& Trautwein, U. (2009). Exploratory structural equation modeling, integrating CFA and EFA: Application to students' evaluations of university teaching. \emph{Structural Equation Modeling}, \emph{16}(3), 439--476. \url{https://doi.org/10.1080/10705510903008220}
+
+\leavevmode\hypertarget{ref-Mather2013}{}%
+Mather, R. C., Koenig, L., Kocher, M. S., Dall, T. M., Gallo, P., Scott, D. J., \ldots{} Spindler, K. P. (2013). Societal and economic impact of anterior cruciate ligament tears. \emph{The Journal of Bone and Joint Surgery. American Volume}, \emph{95}(19), 1751--1759. \url{https://doi.org/10.2106/JBJS.L.01705}
+
+\leavevmode\hypertarget{ref-McCrory2013}{}%
+McCrory, P., Meeuwisse, W. H., Aubry, M., Cantu, R. C., Dvořák, J., Echemendia, R. J., \ldots{} Turner, M. (2013). Consensus statement on concussion in sport: The 4th international conference on concussion in sport, Zurich, November 2012. \emph{Journal of Athletic Training}, \emph{48}(4), 554--575. \url{https://doi.org/10.4085/1062-6050-48.4.05}
+
+\leavevmode\hypertarget{ref-McEwen2005}{}%
+McEwen, B. S. (2005). Stressed or stressed out: What is the difference? \emph{Journal of Psychiatry and Neuroscience}, \emph{30}(5), 315--318. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/16151535}
+
+\leavevmode\hypertarget{ref-McEwen2007}{}%
+McEwen, B. S. (2007). Physiology and neurobiology of stress and adaptation: Central role of the brain. \emph{Physiological Reviews}, \emph{87}(3), 873--904. \url{https://doi.org/10.1152/physrev.00041.2006.}
+
+\leavevmode\hypertarget{ref-McEwen2008}{}%
+McEwen, B. S. (2008). Central effects of stress hormones in health and disease: Understanding the protective and damaging effects of stress and stress mediators. \emph{European Journal of Pharmacology}, \emph{583}(2-3), 174--185. \url{https://doi.org/10.1016/j.ejphar.2007.11.071}
+
+\leavevmode\hypertarget{ref-McGuine2000}{}%
+McGuine, T. A., Greene, J. J., Best, T., \& Leverson, G. (2000). Balance as a predictor of ankle injuries in high school basketball players. \emph{Clinical Journal of Sport Medicine}, \emph{10}(4), 239--244. \url{https://doi.org/10.1097/00042752-200010000-00003}
+
+\leavevmode\hypertarget{ref-McIntosh2005a}{}%
+McIntosh, A. S. (2005). Risk compensation, motivation, injuries, and biomechanics in competitive sport. \emph{British Journal of Sports Medicine}, \emph{39}(1), 2--3. \url{https://doi.org/10.1136/bjsm.2004.016188}
+
+\leavevmode\hypertarget{ref-McNaughton2004}{}%
+McNaughton, N., \& Corr, P. J. (2004). A two-dimensional neuropsychology of defense: Fear/anxiety and defensive distance. \emph{Neuroscience and Biobehavioral Reviews}, \emph{28}(3), 285--305. \url{https://doi.org/10.1016/j.neubiorev.2004.03.005}
+
+\leavevmode\hypertarget{ref-VanMechelen1992}{}%
+Mechelen, W. van, Hlobil, H., \& Kemper, H. C. G. (1992). Incidence, severity, aetiology and prevention of sports injuries: A review of concepts. \emph{Sports Medicine}, \emph{14}(2), 82--99. \url{https://doi.org/10.2165/00007256-199214020-00002}
+
+\leavevmode\hypertarget{ref-Meeuwisse2007}{}%
+Meeuwisse, W. H., Tyreman, H., Hagel, B., \& Emery, C. (2007). A dynamic model of etiology in sport injury: The recursive nature of risk and causation. \emph{Clinical Journal of Sport Medicine}, \emph{17}(3), 215--219. \url{https://doi.org/10.1097/JSM.0b013e3180592a48}
+
+\leavevmode\hypertarget{ref-Mengersen2016}{}%
+Mengersen, K. L., Drovandi, C. C., Robert, C. P., Pyne, D. B., \& Gore, C. J. (2016). Bayesian estimation of small effects in exercise and sports science. \emph{PLoS ONE}, \emph{11}(4), e0147311. \url{https://doi.org/10.1371/journal.pone.0147311}
+
+\leavevmode\hypertarget{ref-R-latex2exp}{}%
+Meschiari, S. (2015). \emph{Latex2exp: Use latex expressions in plots}. Retrieved from \url{https://CRAN.R-project.org/package=latex2exp}
+
+\leavevmode\hypertarget{ref-Reuter2015}{}%
+Montag, C., Smillie, L. D., Markett, S., Reuter, M., \& Cooper, A. (2016). A new measurement for the revised reinforcement sensitivity theory: Psychometric criteria and genetic validation. \emph{Personality and Individual Differences}, \emph{9}(38), 1--12. \url{https://doi.org/10.1016/j.paid.2016.05.274}
+
+\leavevmode\hypertarget{ref-Morey2016}{}%
+Morey, R. D., Hoekstra, R., Rouder, J. N., Lee, M. D., \& Wagenmakers, E. J. (2016). The fallacy of placing confidence in confidence intervals. \emph{Psychonomic Bulletin and Review}, \emph{23}(1), 103--123. \url{https://doi.org/10.3758/s13423-015-0947-8}
+
+\leavevmode\hypertarget{ref-Morgan2018}{}%
+Morgan, G. E., Martin, R., Williams, L., Pearce, O., \& Morris, K. (2018). Objective assessment of stiffness in Achilles tendinopathy: a novel approach using the MyotonPRO. \emph{BMJ Open Sport \& Exercise Medicine}, \emph{4}(1), e000446. \url{https://doi.org/10.1136/bmjsem-2018-000446}
+
+\leavevmode\hypertarget{ref-Mullix2012}{}%
+Mullix, J., Warner, M., \& Stokes, M. (2012). Testing muscle tone and mechanical properties of rectus femoris and biceps femoris using a novel hand held MyotonPRO device: relative ratios and reliability. \emph{Working Papers in the Health Sciences}, \emph{1}(1), 1--8. Retrieved from \url{http://eprints.soton.ac.uk/345538/}
+
+\leavevmode\hypertarget{ref-Munoz2015}{}%
+Munoz, M. L., Roon, A. van, Riese, H., Thio, C., Oostenbroek, E., Westrik, I., \ldots{} Snieder, H. (2015). Validity of (Ultra-)Short Recordings for Heart Rate Variability Measurements. \emph{PLOS ONE}, \emph{10}(9), e0138921. \url{https://doi.org/10.1371/journal.pone.0138921}
+
+\leavevmode\hypertarget{ref-Murphy2003}{}%
+Murphy, D. F., Connolly, D. A. J., \& Beynnon, B. D. (2003). Risk factors for lower extremity injury: A review of the literature. \emph{British Journal of Sports Medicine}, \emph{37}(1), 13--29. \url{https://doi.org/10.1136/bjsm.37.1.13}
+
+\leavevmode\hypertarget{ref-Murphy2002}{}%
+Murphy, K. (2002). \emph{Dynamic Bayesian networks: Representation, inference and learning} (PhD thesis). UC Berkeley.
+
+\leavevmode\hypertarget{ref-Muthen2012}{}%
+Muthén, B., \& Asparouhov, T. (2012). Bayesian structural equation modelling: A more flexible representation of substantive theory. \emph{Psychological Methods}, \emph{17}(3), 313--335. \url{https://doi.org/10.1037/a0026802}
+
+\leavevmode\hypertarget{ref-R-tibble}{}%
+Müller, K., \& Wickham, H. (2019). \emph{Tibble: Simple data frames}. Retrieved from \url{https://CRAN.R-project.org/package=tibble}
+
+\leavevmode\hypertarget{ref-Nair2014}{}%
+Nair, K., Dougherty, J., Schaefer, E., Kelly, J., \& Masi, A. (2014). Repeatability, reproducibility, and calibration of the MyotonPRO on tissue mimicking phantoms. In \emph{ASME summer bioengineering conference} (pp. 1--2). \url{https://doi.org/10.1115/SBC2013-14622}
+
+\leavevmode\hypertarget{ref-Neely1998}{}%
+Neely, F. G. (1998). Biomechanical risk factors for exercise-related lower limb injuries. \emph{Sports Medicine}, \emph{26}(6), 395--413. \url{https://doi.org/10.2165/00007256-199826060-00003}
+
+\leavevmode\hypertarget{ref-VanOckenburg2015a}{}%
+Ockenburg, S. L. van, Tak, L. M., Bakker, S. J. L., Gans, R. O. B., Jonge, P. de, \& Rosmalen, J. G. M. (2015). Effects of adverse life events on heart rate variability, cortisol, and C-reactive protein. \emph{Acta Psychiatrica Scandinavica}, \emph{131}(1), 40--50. \url{https://doi.org/10.1111/acps.12286}
+
+\leavevmode\hypertarget{ref-ODonnell2018a}{}%
+O'Donnell, S., Bird, S., Jacobson, G., \& Driller, M. (2018). Sleep and stress hormone responses to training and competition in elite female athletes. \emph{European Journal of Sport Science}, \emph{18}(5), 611--618. \url{https://doi.org/10.1080/17461391.2018.1439535}
+
+\leavevmode\hypertarget{ref-Olmedilla2018}{}%
+Olmedilla, A., Rubio, V. J., Fuster-Parra, P., Pujals, C., \& García-Mas, A. (2018). A Bayesian approach to sport injuries likelihood: Does player's self-efficacy and environmental factors plays the main role? \emph{Frontiers in Psychology}, \emph{9}, 1--10. \url{https://doi.org/10.3389/fpsyg.2018.01174}
+
+\leavevmode\hypertarget{ref-Otter2015}{}%
+Otter, R., Brink, M., Diercks, R., \& Lemmink, K. (2015). A negative life event impairs psychosocial stress, recovery and running economy of runners. \emph{International Journal of Sports Medicine}, \emph{37}(03), 224--229. \url{https://doi.org/10.1055/s-0035-1555932}
+
+\leavevmode\hypertarget{ref-Ohman2001}{}%
+Öhman, A., Flykt, A., \& Esteves, F. (2001). Emotion drives attention: Detecting the snake in the grass. \emph{Journal of Experimental Psychology: General}, \emph{130}(3), 466--478. \url{https://doi.org/10.1037/0096-3445.130.3.466}
+
+\leavevmode\hypertarget{ref-Ozturk2013}{}%
+Öztürk, S., \& Kiliç, D. (2013). What is the economic burden of sports injuries? \emph{Eklem Hastaliklari Ve Cerrahisi}, \emph{24}(2), 108--111. \url{https://doi.org/10.5606/ehc.2013.24}
+
+\leavevmode\hypertarget{ref-Paillard2015}{}%
+Paillard, T., \& Noé, F. (2015). Techniques and methods for testing the postural function in healthy and pathological subjects. \emph{BioMed Research International}, 1--15. \url{https://doi.org/10.1155/2015/891390}
+
+\leavevmode\hypertarget{ref-Paillard2006}{}%
+Paillard, T., Noé, F., Rivière, T., Marion, V., Montoya, R., \& Dupui, P. (2006). Postural performance and strategy in the unipedal stance of soccer players at different levels of competition. \emph{Journal of Athletic Training}, \emph{41}(2), 172--176. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/16791302}
+
+\leavevmode\hypertarget{ref-Palmer-Green2014}{}%
+Palmer-Green, D., \& Elliott, N. (2014). Sports injury and illness epidemiology: Great Britain Olympic Team (TeamGB) surveillance during the Sochi 2014 Winter Olympic Games. \emph{British Journal of Sports Medicine}, \emph{49}(1), 25--29. \url{https://doi.org/10.1136/bjsports-2014-094206}
+
+\leavevmode\hypertarget{ref-Pargman1989}{}%
+Pargman, D., \& Lunt, S. D. (1989). The relationship of self-concept and locus of control to the severity of injury in freshmen collegiate football players. \emph{Sports Medicine, Training and Rehabilitation}, \emph{1}(3), 203--208. \url{https://doi.org/10.1080/15438628909511877}
+
+\leavevmode\hypertarget{ref-VanParidon2017}{}%
+Paridon, K. N. van, Timmis, M. A., Nevison, C. M., \& Bristow, M. (2017). The anticipatory stress response to sport competition; A systematic review with meta-analysis of cortisol reactivity. \emph{BMJ Open Sport and Exercise Medicine}, \emph{3}(1), e000261. \url{https://doi.org/10.1136/bmjsem-2017-000261}
+
+\leavevmode\hypertarget{ref-Passer1983a}{}%
+Passer, M. W., \& Seese, M. D. (1983). Life stress and athletic injury: Examination of positive versus negative events and three moderator variables. \emph{Journal of Human Stress}, \emph{9}(4), 11--16. \url{https://doi.org/10.1080/0097840X.1983.9935025}
+
+\leavevmode\hypertarget{ref-Pearl1988}{}%
+Pearl, J. (1988). \emph{Probabilistic reasoning in intelligent systems: Networks of plausible inference}. San Francisco, CA: Morgan Kaufmann Publishers.
+
+\leavevmode\hypertarget{ref-R-patchwork}{}%
+Pedersen, T. L. (2017). \emph{Patchwork: The composer of ggplots}. Retrieved from \url{https://github.com/thomasp85/patchwork}
+
+\leavevmode\hypertarget{ref-Perna2003}{}%
+Perna, F. M., Antoni, M. H., Baum, A., Gordon, P., \& Schneiderman, N. (2003). Cognitive behavioral stress management effects on injury and illness among competitive athletes: A randomized clinical trial. \emph{Annals of Behavioral Medicine}, \emph{25}(1), 66--73. Retrieved from \url{https://www.scopus.com/inward/record.uri?eid=2-s2.0-0037262738\%7B/\&\%7DpartnerID=40\%7B/\&\%7Dmd5=37332ebe6a962abf5178e51d6ebaedb7}
+
+\leavevmode\hypertarget{ref-Perna1995}{}%
+Perna, F. M., \& McDowell, S. L. (1995). Role of psychological stress in cortisol recovery from exhaustive exercise among elite athletes. \emph{International Journal of Behavioral Medicine}, \emph{2}(1), 13--26. \url{https://doi.org/10.1207/s15327558ijbm0201_2}
+
+\leavevmode\hypertarget{ref-Perna1997}{}%
+Perna, F., Schneiderman, N., \& LaPerriere, A. (1997). Psychological stress, exercise and immunity. \emph{International Journal of Sports Medicine}, \emph{18}(S1), 78--83. \url{https://doi.org/10.1055/s-2007-972703}
+
+\leavevmode\hypertarget{ref-Petrie1992}{}%
+Petrie, T. A. (1992). Psychosocial antecedents of athletic injury: The effects of life stress and social support on female collegiate gymnasts. \emph{Journal of Behavioral Medicine}, \emph{18}(18), 127--138. \url{https://doi.org/10.1080/08964289.1992.9936963}
+
+\leavevmode\hypertarget{ref-Petrie1993}{}%
+Petrie, T. A. (1993). Coping skills, competitive trait anxiety, and playing status: Moderating effects on the life stress-injury relationship. \emph{Journal of Sport and Exercise Psychology}, \emph{15}(3), 261--274. \url{https://doi.org/10.1123/jsep.15.3.261}
+
+\leavevmode\hypertarget{ref-Petrie2014}{}%
+Petrie, T. A., Deiters, J., \& Harmison, R. J. (2014). Mental toughness, social support, and athletic identity: Moderators of the life stress-injury relationship in collegiate football players. \emph{Sport, Exercise, and Performance Psychology}, \emph{3}(1), 13--27. \url{https://doi.org/10.1037/a0032698}
+
+\leavevmode\hypertarget{ref-Perna2004}{}%
+Petrie, T. A., \& Perna, F. M. (2004). Psychology of injury: Theory, research, and practice. In T. Morris \& J. Summers (Eds.), \emph{Sport psychology: Theory, applications and issues} (2nd ed., pp. 547--565). Milton, QLD, Australia: Wiley.
+
+\leavevmode\hypertarget{ref-Philippe1998}{}%
+Philippe, P., \& Mansi, O. (1998). Nonlinearity in the epidemiology of complex health and disease processes. \emph{Theoretical Medicine and Bioethics}, \emph{19}(6), 591--607. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/10051792}
+
+\leavevmode\hypertarget{ref-PickeringRodriguez2017}{}%
+Pickering-Rodriguez, E. C., Watsford, M. L., Bower, R. G., \& Murphy, A. J. (2017). The relationship between lower body stiffness and injury incidence in female netballers. \emph{Sports Biomechanics}, \emph{16}(3), 361--373. \url{https://doi.org/10.1080/14763141.2017.1319970}
+
+\leavevmode\hypertarget{ref-Pieper2007}{}%
+Pieper, S., Brosschot, J. F., Van Der Leeden, R., \& Thayer, J. F. (2007). Cardiac effects of momentary assessed worry episodes and stressful events. \emph{Psychosomatic Medicine}, \emph{69}(9), 901--909. \url{https://doi.org/10.1097/PSY.0b013e31815a9230}
+
+\leavevmode\hypertarget{ref-Piggott2018}{}%
+Piggott, B., Müller, S., Chivers, P., Papaluca, C., \& Hoyne, G. (2018). Is sports science answering the call for interdisciplinary research? A~systematic review. \emph{European Journal of Sport Science}, \emph{0}(0), 1--20. \url{https://doi.org/10.1080/17461391.2018.1508506}
+
+\leavevmode\hypertarget{ref-Plews2012}{}%
+Plews, D. J., Laursen, P. B., Kilding, A. E., \& Buchheit, M. (2012). Heart rate variability in elite triathletes, is variation in variability the key to effective training? A case comparison. \emph{European Journal of Applied Physiology}, \emph{112}(11), 3729--3741. \url{https://doi.org/10.1007/s00421-012-2354-4}
+
+\leavevmode\hypertarget{ref-Plews2017}{}%
+Plews, D. J., Scott, B., Altini, M., Wood, M., Kilding, A. E., \& Laursen, P. B. (2017). Comparison of heart-rate-variability recording with smartphone photoplethysmography, polar H7 chest strap, and electrocardiography. \emph{International Journal of Sports Physiology and Performance}, \emph{12}(10), 1324--1328. \url{https://doi.org/10.1123/ijspp.2016-0668}
+
+\leavevmode\hypertarget{ref-Plsek2001}{}%
+Plsek, P. E., \& Greenhalgh, T. (2001). The challenge of complexity in health care. \emph{BMJ}, \emph{323}(7313), 625--628. \url{https://doi.org/10.1136/bmj.323.7313.625}
+
+\leavevmode\hypertarget{ref-Post2017}{}%
+Post, E. G., Trigsted, S. M., Riekena, J. W., Hetzel, S., McGuine, T. A., Brooks, M. A., \& Bell, D. R. (2017). The association of sport specialization and training volume with injury history in youth athletes. \emph{American Journal of Sports Medicine}, \emph{45}(6), 1405--1412. \url{https://doi.org/10.1177/0363546517690848}
+
+\leavevmode\hypertarget{ref-Pruyn2015}{}%
+Pruyn, E. C., Watsford, M. L., \& Murphy, A. J. (2015). Differences in lower-body stiffness between levels of netball competition. \emph{Journal of Strength and Conditioning Research}, \emph{29}(5), 1197--1202. \url{https://doi.org/10.1519/JSC.0000000000000418}
+
+\leavevmode\hypertarget{ref-Pruyn2016}{}%
+Pruyn, E. C., Watsford, M. L., \& Murphy, A. J. (2016). Validity and reliability of three methods of stiffness assessment. \emph{Journal of Sport and Health Science}, \emph{5}(4), 476--483. \url{https://doi.org/10.1016/j.jshs.2015.12.001}
+
+\leavevmode\hypertarget{ref-Pruyn2014}{}%
+Pruyn, E. C., Watsford, M., \& Murphy, A. (2014). The relationship between lower-body stiffness and dynamic performance. \emph{Applied Physiology, Nutrition, and Metabolism}, \emph{39}(10), 1144--1150. \url{https://doi.org/10.1139/apnm-2014-0063}
+
+\leavevmode\hypertarget{ref-Pulopulos2018}{}%
+Pulopulos, M. M., Vanderhasselt, M. A., \& De Raedt, R. (2018). Association between changes in heart rate variability during the anticipation of a stressful situation and the stress-induced cortisol response. \emph{Psychoneuroendocrinology}, \emph{94}(May), 63--71. \url{https://doi.org/10.1016/j.psyneuen.2018.05.004}
+
+\leavevmode\hypertarget{ref-Qian2015}{}%
+Qian, S. S., \& Miltner, R. J. (2015). A continuous variable Bayesian networks model for water quality modeling: A case study of setting nitrogen criterion for small rivers and streams in Ohio, USA. \emph{Environmental Modelling and Software}, \emph{69}, 14--22. \url{https://doi.org/10.1016/j.envsoft.2015.03.001}
+
+\leavevmode\hypertarget{ref-Quintana2016a}{}%
+Quintana, D. S., Alvares, G. A., \& Heathers, J. A. J. (2016). Guidelines for Reporting Articles on Psychiatry and Heart rate variability (GRAPH): Recommendations to advance research communication. \emph{Translational Psychiatry}, \emph{6}(5), e803. \url{https://doi.org/10.1038/tp.2016.73}
+
+\leavevmode\hypertarget{ref-Rath2017}{}%
+Rath, R., \& Wade, M. G. (2017). The two faces of postural control in older adults: Stability and function. \emph{EBioMedicine}, \emph{21}, 5--6. \url{https://doi.org/10.1016/j.ebiom.2017.03.030}
+
+\leavevmode\hypertarget{ref-RCoreTeam2019}{}%
+R Core Team. (2019a). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{https://www.r-project.org/}
+
+\leavevmode\hypertarget{ref-R-base}{}%
+R Core Team. (2019b). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{https://www.R-project.org/}
+
+\leavevmode\hypertarget{ref-Reiner2013}{}%
+Reiner, M., Niermann, C., Jekauc, D., \& Woll, A. (2013). Long-term health benefits of physical activity--a systematic review of longitudinal studies. \emph{BMC Public Health}, \emph{13}(1), 1--9. \url{https://doi.org/10.1186/1471-2458-13-813}
+
+\leavevmode\hypertarget{ref-Rider1995}{}%
+Rider, S. P., \& Hicks, R. A. (1995). Stress, coping and injuries in males and female high school basketball players. \emph{Perceptual and Motor Skills}, \emph{81}(2), 499--503. \url{https://doi.org/10.2466/pms.1995.81.2.499}
+
+\leavevmode\hypertarget{ref-Riemann1999d}{}%
+Riemann, B. L., Guskiewicz, K. M., \& Shields, E. W. (1999). Relationship between clinical and forceplate measures of postural stability. \emph{Journal of Sport Rehabilitation}, \emph{8}(2), 71--82. \url{https://doi.org/10.1123/jsr.8.2.71}
+
+\leavevmode\hypertarget{ref-R-broom}{}%
+Robinson, D., \& Hayes, A. (2019). \emph{Broom: Convert statistical analysis objects into tidy tibbles}. Retrieved from \url{https://CRAN.R-project.org/package=broom}
+
+\leavevmode\hypertarget{ref-Rodriguez-Linares2017}{}%
+Rodriguez-Linares, L., Vila, X., Lado, M. J., Mendez, A., Otero, A., \& Garcia, C. A. (2019). \emph{RHRV: Heart rate variability analysis of ecg data}. Retrieved from \url{https://CRAN.R-project.org/package=RHRV}
+
+\leavevmode\hypertarget{ref-Rogers2005}{}%
+Rogers, T., \& Landers, D. M. (2005). Mediating effects of peripheral vision in the life event stress/athletic injury relationship. \emph{Journal of Sport and Exercise Psychology}, \emph{27}(3), 271--288. \url{https://doi.org/10.1002/9781444303650}
+
+\leavevmode\hypertarget{ref-Romero-Franco2014}{}%
+Romero-Franco, N., Gallego-Izquierdo, T., Martínez-López, E. J., Hita-Contreras, F., Osuna-Pére, Catalina, M., \& Martínez-Amat, A. (2014). Postural stability and subsequent sports injuries during indoor season of athletes. \emph{Journal of Physical Therapy Science}, \emph{26}(5), 683--687. \url{https://doi.org/10.1589/jpts.26.683}
+
+\leavevmode\hypertarget{ref-Roos2018}{}%
+Roos, L. G., Levens, S. M., \& Bennett, J. M. (2018). Stressful life events, relationship stressors, and cortisol reactivity: The moderating role of suppression. \emph{Psychoneuroendocrinology}, \emph{89}, 69--77. \url{https://doi.org/10.1016/j.psyneuen.2017.12.026}
+
+\leavevmode\hypertarget{ref-Rosa2014}{}%
+Rosa, B. B., Asperti, A. M., Helito, C. P., Demange, M. K., Fernandes, T. L., \& Hernandez, A. J. (2014). Epidemiology of sports injuries on collegiate athletes at a single center. \emph{Acta Ortopédica Brasileira}, \emph{22}(6), 321--324. \url{https://doi.org/10.1590/1413-78522014220601007}
+
+\leavevmode\hypertarget{ref-Ross2011}{}%
+Ross, S. E., Linens, S. W., Wright, C. J., \& Arnold, B. L. (2011). Balance assessments for predicting functional ankle instability and stable ankles. \emph{Gait and Posture}, \emph{34}(4), 539--542. \url{https://doi.org/10.1016/j.gaitpost.2011.07.011}
+
+\leavevmode\hypertarget{ref-Rossi2018}{}%
+Rossi, A., Pappalardo, L., Cintia, P., Iaia, F. M., Fernàndez, J., \& Medina, D. (2018). Effective injury forecasting in soccer with GPS training data and machine learning. \emph{Plos One}, \emph{13}(7), e0201264. \url{https://doi.org/10.1371/journal.pone.0201264}
+
+\leavevmode\hypertarget{ref-Rowell2018}{}%
+Rowell, A. E., Aughey, R. J., Hopkins, W. G., Esmaeili, A., Lazarus, B. H., \& Cormack, S. J. (2018). Effects of training and competition load on neuromuscular recovery, testosterone, cortisol, and match performance during a season of professional football. \emph{Frontiers in Physiology}, \emph{9}, 1--11. \url{https://doi.org/10.3389/fphys.2018.00668}
+
+\leavevmode\hypertarget{ref-Norvig2009}{}%
+Russell, S. J., \& Norvig, P. (2009). \emph{Artificial Intelligence: A Modern Approach} (3rd ed.). Prentice Hall. Retrieved from \url{http://aima.cs.berkeley.edu/}
+
+\leavevmode\hypertarget{ref-Rutter1994}{}%
+Rutter, M. (1994). Stress research: Accomplishments and the tasks ahead. In M. Haggerty R, Sherrod L, Rutter (Ed.), \emph{Stress, risk, and resilience in children and adolescents: Processes, mechanisms, and interventions} (pp. 354--386). Cambridge, MA: Cambridge University Press.
+
+\leavevmode\hypertarget{ref-Ryan2019}{}%
+Ryan, J. L., Pracht, E. E., \& Orban, B. L. (2019). Inpatient and emergency department costs from sports injuries among youth aged 5-18 years. \emph{BMJ Open Sport and Exercise Medicine}, \emph{5}(1), e000491. \url{https://doi.org/10.1136/bmjsem-2018-000491}
+
+\leavevmode\hypertarget{ref-Saboul2014}{}%
+Saboul, D., Pialoux, V., \& Hautier, C. (2014). The breathing effect of the LF/HF ratio in the heart rate variability measurements of athletes. \emph{European Journal of Sport Science}, \emph{14}(Supp 1), 282--288. \url{https://doi.org/10.1080/17461391.2012.691116}
+
+\leavevmode\hypertarget{ref-Salavati2007}{}%
+Salavati, M., Moghadam, M., Ebrahimi, I., \& Arab, A. M. (2007). Changes in postural stability with fatigue of lower extremity frontal and sagittal plane movers. \emph{Gait and Posture}, \emph{26}(2), 214--218. \url{https://doi.org/10.1016/j.gaitpost.2006.09.001}
+
+\leavevmode\hypertarget{ref-Salimetrics2018}{}%
+Salimetrics. (2018). \emph{Salivary cortisol enzyme immunoassay kit} (pp. 1--21). Retrieved from \url{https://salimetrics.com/wp-content/uploads/2018/03/salivary-cortisol-elisa-kit.pdf}
+
+\leavevmode\hypertarget{ref-Sarason1978}{}%
+Sarason, I. G., Johnson, J. H., \& Siegel, J. M. (1978). Assessing the impact of life changes: Development of the Life Experiences Survey. \emph{Journal of Consulting and Clinical Psychology}, \emph{46}(5), 932--946. \url{https://doi.org/10.1037/0022-006X.46.5.932}
+
+\leavevmode\hypertarget{ref-Sassi2015}{}%
+Sassi, R., Cerutti, S., Lombardi, F., Malik, M., Huikuri, H. V., Peng, C. K., \ldots{} Yamamoto, Y. (2015). Advances in heart rate variability signal analysis: Joint position statement by the e-Cardiology ESC Working Group and the European Heart Rhythm Association co-endorsed by the Asia Pacific Heart Rhythm Society. \emph{Europace}, \emph{17}(9), 1341--1353. \url{https://doi.org/10.1093/europace/euv015}
+
+\leavevmode\hypertarget{ref-R-bnlearn_b}{}%
+Scutari, M. (2010). Learning bayesian networks with the bnlearn R package. \emph{Journal of Statistical Software}, \emph{35}(3), 1--22. \url{https://doi.org/10.18637/jss.v035.i03}
+
+\leavevmode\hypertarget{ref-R-bnlearn_a}{}%
+Scutari, M. (2017). Bayesian network constraint-based structure learning algorithms: Parallel and optimized implementations in the bnlearn R package. \emph{Journal of Statistical Software}, \emph{77}(2), 1--20. \url{https://doi.org/10.18637/jss.v077.i02}
+
+\leavevmode\hypertarget{ref-Scutari2017}{}%
+Scutari, M., Auconi, P., Caldarelli, G., \& Franchi, L. (2017). Bayesian networks analysis of malocclusion data. \emph{Scientific Reports}, \emph{7}(1), 1--11. \url{https://doi.org/10.1038/s41598-017-15293-w}
+
+\leavevmode\hypertarget{ref-Scutari2014}{}%
+Scutari, M., \& Denis, J.-B. (2014). \emph{Bayesian networks: with examples in R} (1st ed.). Chapman \& Hall/CRC. Retrieved from \url{https://www.crcpress.com/Bayesian-Networks-With-Examples-in-R/Scutari-Denis/p/book/9781482225587}
+
+\leavevmode\hypertarget{ref-Scutari2013}{}%
+Scutari, M., \& Nagarajan, R. (2013). Identifying significant edges in graphical models of molecular networks. \emph{Artificial Intelligence in Medicine}, \emph{57}(3), 207--217. \url{https://doi.org/10.1016/j.artmed.2012.12.006}
+
+\leavevmode\hypertarget{ref-Seeman1997}{}%
+Seeman, T. E., Singer, B. H., Rowe, J. W., Horwitz, R. I., \& McEwen, B. S. (1997). Price of adaptation--allostatic load and its health consequences. MacArthur studies of successful aging. \emph{Archives of Internal Medicine}, \emph{157}(19), 2259--2268. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/9343003}
+
+\leavevmode\hypertarget{ref-Sell2007}{}%
+Sell, T. C., Tsai, Y.-S., Smoliga, J. M., Myers, J. B., \& Lephart, S. M. (2007). Strength, flexibility, and balance characteristics of highly proficient golfers. \emph{The Journal of Strength and Conditioning Research}, \emph{21}(4), 1166. \url{https://doi.org/10.1519/R-21826.1}
+
+\leavevmode\hypertarget{ref-Shaffer2017}{}%
+Shaffer, F., \& Ginsberg, J. P. (2017). An overview of heart rate variability metrics and norms. \emph{Frontiers in Public Health}, \emph{5}, 1--17. \url{https://doi.org/10.3389/fpubh.2017.00258}
+
+\leavevmode\hypertarget{ref-Sheu2016}{}%
+Sheu, Y., Chen, L. H., \& Hedegaard, H. (2016). Sports- and recreation-related injury episodes in the United States, 2011-2014. \emph{National Health Statistics Reports}, (99), 1--12. Retrieved from \url{https://www.ncbi.nlm.nih.gov/pubmed/27906643}
+
+\leavevmode\hypertarget{ref-Siart2017}{}%
+Siart, B., Nimmerichter, A., Vidotto, C., \& Wallner, B. (2017). Status, stress and performance in track and field athletes during the European games in Baku (Azerbaijan). \emph{Scientific Reports}, \emph{7}(1), 1--9. \url{https://doi.org/10.1038/s41598-017-06461-z}
+
+\leavevmode\hypertarget{ref-Sibold2012}{}%
+Sibold, J., \& Zizzi, S. (2012). Psychosocial variables and time to injury onset: A hurdle regression analysis model. \emph{Journal of Athletic Training}, \emph{47}(5), 537--540. \url{https://doi.org/10.4085/1062-6050-47.3.15}
+
+\leavevmode\hypertarget{ref-Sin2016}{}%
+Sin, N. L., Sloan, R. P., McKinley, P. S., \& Almeida, D. M. (2016). Linking daily stress processes and laboratory-based heart rate variability in a national sample of midlife and older adults. \emph{Psychosomatic Medicine}, \emph{78}(5), 573--582. \url{https://doi.org/10.1097/PSY.0000000000000306}
+
+\leavevmode\hypertarget{ref-Slimani2018}{}%
+Slimani, M., Bragazzi, N. L., Znazen, H., Paravlic, A., Azaiez, F., \& Tod, D. (2018). Psychosocial predictors and psychological prevention of soccer injuries: A systematic review and meta-analysis of the literature. \emph{Physical Therapy in Sport}, \emph{32}, 293--300. \url{https://doi.org/10.1016/j.ptsp.2018.05.006}
+
+\leavevmode\hypertarget{ref-Smederevac2014}{}%
+Smederevac, S., Mitrović, D., Čolović, P., \& Nikolašević, Ž. (2014). Validation of the measure of revised reinforcement sensitivity theory constructs. \emph{Journal of Individual Differences}, \emph{35}(1), 12--21. \url{https://doi.org/10.1027/1614-0001/a000121}
+
+\leavevmode\hypertarget{ref-Smith2015}{}%
+Smith, C. A., Chimera, N. J., \& Warren, M. (2015). Association of Y balance test reach asymmetry and injury in Division I Athletes. \emph{Medicine and Science in Sports and Exercise}, \emph{47}(1), 136--141. \url{https://doi.org/10.1249/MSS.0000000000000380}
+
+\leavevmode\hypertarget{ref-Smith1990}{}%
+Smith, R. E., Smoll, F. L., \& Ptacek, J. T. (1990). Conjunctive moderator variables in vulnerability and resiliency research: Life stress, social support and coping skills, and adolescent sport injuries. \emph{Journal of Personality and Social Psychology}, \emph{58}(2), 360--370. \url{https://doi.org/10.1037/0022-3514.58.2.360}
+
+\leavevmode\hypertarget{ref-Steffen2009}{}%
+Steffen, K., Pensgaard, A. M., \& Bahr, R. (2009). Self-reported psychological characteristics as risk factors for injuries in female youth football. \emph{Scandinavian Journal of Medicine and Science in Sports}, \emph{19}(3), 442--451. \url{https://doi.org/10.1111/j.1600-0838.2008.00797.x}
+
+\leavevmode\hypertarget{ref-Sterling1988}{}%
+Sterling, P., \& Eyer, J. (1988). Allostasis: A new paradigm to explain arousal pathology. In \emph{Handbook of life stress, cognition and health.} (pp. 629--649). Oxford, England: Wiley.
+
+\leavevmode\hypertarget{ref-Strahorn2017}{}%
+Strahorn, J., Serpell, B. G., McKune, A., \& Pumpa, K. L. (2017). Effects of physical and psychosocial interventions on hormone and performance outcomes in professional rugby union players: A systematic review. \emph{Journal of Strength and Conditioning Research}, \emph{31}(11), 3158--3169.
+
+\leavevmode\hypertarget{ref-Swanik2007}{}%
+Swanik, C. B., Covassin, T., Stearne, D. J., \& Schatz, P. (2007). The relationship between neurocognitive function and noncontact anterior cruciate ligament injuries. \emph{American Journal of Sports Medicine}, \emph{35}(6), 943--948. \url{https://doi.org/10.1177/0363546507299532}
+
+\leavevmode\hypertarget{ref-Tarvainen2014}{}%
+Tarvainen, M. P., Niskanen, J. P., Lipponen, J. A., Ranta-aho, P. O., \& Karjalainen, P. A. (2014). Kubios HRV - Heart rate variability analysis software. \emph{Computer Methods and Programs in Biomedicine}, \emph{113}(1), 210--220. \url{https://doi.org/10.1016/j.cmpb.2013.07.024}
+
+\leavevmode\hypertarget{ref-Tobi2018a}{}%
+Tobi, H., \& Kampen, J. K. (2018). Research design: the methodology for interdisciplinary research framework. \emph{Quality and Quantity}, \emph{52}(3), 1209--1225. \url{https://doi.org/10.1007/s11135-017-0513-8}
+
+\leavevmode\hypertarget{ref-Tosevski2006}{}%
+Tosevski, D. L., \& Milovancevic, M. P. (2006). Stressful life events and physical health. \emph{Current Opinion in Psychiatry}, \emph{19}(2), 184--189. \url{https://doi.org/10.1097/01.yco.0000214346.44625.57}
+
+\leavevmode\hypertarget{ref-Trojian2006}{}%
+Trojian, T. H., \& McKeag, D. B. (2006). Single leg balance test to identify risk of ankle sprains. \emph{British Journal of Sports Medicine}, \emph{40}(7), 610--613. \url{https://doi.org/10.1136/bjsm.2005.024356}
+
+\leavevmode\hypertarget{ref-Tropp1984}{}%
+Tropp, H., Ekstrand, J., \& Gillquist, J. (1984). Stabilometry in functional instability of the ankle and its value in predicting injury. \emph{Medicine and Science in Sports and Exercise}, \emph{16}, 64--66. \url{https://doi.org/10.1249/00005768-198401000-00013}
+
+\leavevmode\hypertarget{ref-Tsigos2002}{}%
+Tsigos, C., \& Chrousos, G. P. (2002). Hypothalamic-pituitary-adrenal axis, neuroendocrine factors and stress. \emph{Journal of Psychosomatic Research}, \emph{53}(4), 865--871. Retrieved from \url{http://www.ncbi.nlm.nih.gov/pubmed/12377295}
+
+\leavevmode\hypertarget{ref-Vacek2016}{}%
+Vacek, P. M., Slauterbeck, J. R., Tourville, T. W., Sturnick, D. R., Holterman, L. A., Smith, H. C., \ldots{} Beynnon, B. D. (2016). Multivariate analysis of the risk factors for first-time noncontact ACL injury in high school and college athletes: A prospective cohort study with a nested, matched case-control analysis. \emph{American Journal of Sports Medicine}, \emph{44}(6), 1492--1501. \url{https://doi.org/10.1177/0363546516634682}
+
+\leavevmode\hypertarget{ref-Valovich2003}{}%
+Valovich, T. C., Perrin, D. H., \& Gansneder, B. M. (2003). Repeat administration elicits a practice effect with the Balance Error Scoring System but not with the Standardized Assessment of Concussion in high school athletes. \emph{Journal of Athletic Training}, \emph{38}(1), 51--56. Retrieved from \url{https://www.ncbi.nlm.nih.gov/pubmed/12937472}
+
+\leavevmode\hypertarget{ref-Walker2017}{}%
+Walker, B. R., \& Jackson, C. J. (2017). Examining the validity of the revised Reinforcement Sensitivity Theory scales. \emph{Personality and Individual Differences}, \emph{106}, 90--94. \url{https://doi.org/10.1016/j.paid.2016.10.035}
+
+\leavevmode\hypertarget{ref-Wang2006}{}%
+Wang, H. K., Chen, C. H., Shiang, T. Y., Jan, M. H., \& Lin, K. H. (2006). Risk-factor analysis of high school basketball-player ankle injuries: A prospective controlled cohort study evaluating postural sway, ankle strength, and flexibility. \emph{Archives of Physical Medicine and Rehabilitation}, \emph{87}(6), 821--825. \url{https://doi.org/10.1016/j.apmr.2006.02.024}
+
+\leavevmode\hypertarget{ref-Wasserstein2019}{}%
+Wasserstein, R. L., Schirm, A. L., \& Lazar, N. A. (2019). Moving to a World Beyond ``p \textless{} 0.05''. \emph{American Statistician}, \emph{73}(sup1), 1--19. \url{https://doi.org/10.1080/00031305.2019.1583913}
+
+\leavevmode\hypertarget{ref-R-ggplot2}{}%
+Wickham, H. (2016). \emph{Ggplot2: Elegant graphics for data analysis}. Springer-Verlag New York. Retrieved from \url{https://ggplot2.tidyverse.org}
+
+\leavevmode\hypertarget{ref-R-tidyverse}{}%
+Wickham, H. (2017). \emph{Tidyverse: Easily install and load the 'tidyverse'}. Retrieved from \url{https://CRAN.R-project.org/package=tidyverse}
+
+\leavevmode\hypertarget{ref-R-forcats}{}%
+Wickham, H. (2019a). \emph{Forcats: Tools for working with categorical variables (factors)}. Retrieved from \url{https://CRAN.R-project.org/package=forcats}
+
+\leavevmode\hypertarget{ref-R-stringr}{}%
+Wickham, H. (2019b). \emph{Stringr: Simple, consistent wrappers for common string operations}. Retrieved from \url{https://CRAN.R-project.org/package=stringr}
+
+\leavevmode\hypertarget{ref-R-dplyr}{}%
+Wickham, H., François, R., Henry, L., \& Müller, K. (2019). \emph{Dplyr: A grammar of data manipulation}. Retrieved from \url{https://CRAN.R-project.org/package=dplyr}
+
+\leavevmode\hypertarget{ref-R-tidyr}{}%
+Wickham, H., \& Henry, L. (2019). \emph{Tidyr: Easily tidy data with 'spread()' and 'gather()' functions}. Retrieved from \url{https://CRAN.R-project.org/package=tidyr}
+
+\leavevmode\hypertarget{ref-R-readr}{}%
+Wickham, H., Hester, J., \& Francois, R. (2018). \emph{Readr: Read rectangular text data}. Retrieved from \url{https://CRAN.R-project.org/package=readr}
+
+\leavevmode\hypertarget{ref-Wiese-Bjornstal2009}{}%
+Wiese-Bjornstal, D. M. (2009). Sport injury and college athlete health across the lifespan. \emph{Journal of Intercollegiate Sport}, \emph{2}(1), 64--80. \url{https://doi.org/10.1123/jis.2.1.64}
+
+\leavevmode\hypertarget{ref-Wilkerson2012a}{}%
+Wilkerson, G. B. (2012). Neurocognitive reaction time predicts lower extremity sprains and strains. \emph{International Journal of Athletic Therapy and Training}, \emph{17}(6), 4--9. \url{https://doi.org/10.1123/ijatt.17.6.4}
+
+\leavevmode\hypertarget{ref-Williams1998}{}%
+Williams, J. M., \& Andersen, M. B. (1998). Psychosocial antecedents of sport injury: review and critique of the stress and injury model. \emph{Journal of Applied Sport Psychology}, \emph{10}, 5--25. \url{https://doi.org/10.1080/10413209808406375}
+
+\leavevmode\hypertarget{ref-Williams2007}{}%
+Williams, J. M., \& Andersen, M. B. (2007). Psychosocial antecedents of sport injury and interventions for risk reduction. In G. Tenenbaum \& R. C. Eklund (Eds.), \emph{Handbook of sport psychology} (3rd ed., pp. 379--403). Hoboken, NJ, USA: Wiley. \url{https://doi.org/10.1002/9781118270011.ch17}
+
+\leavevmode\hypertarget{ref-Williams2017}{}%
+Williams, S., Booton, T., Watson, M., Rowland, D., \& Altini, M. (2017). Heart rate variability is a moderating factor in the workload-injury relationship of competitive crossfit™ athletes. \emph{Journal of Sports Science and Medicine}, \emph{16}(4), 443--449.
+
+\leavevmode\hypertarget{ref-Williams2017b}{}%
+Williams, S., Trewartha, G., Kemp, S. P. T., Brooks, J. H. M., Fuller, C. W., Taylor, A. E., \ldots{} Stokes, K. A. (2017). How much rugby is too much? A seven-season prospective cohort study of match exposure and injury risk in professional rugby union players. \emph{Sports Medicine}, \emph{47}(11), 2395--2402. \url{https://doi.org/10.1007/s40279-017-0721-3}
+
+\leavevmode\hypertarget{ref-Xiao-xuan2007}{}%
+Xiao-xuan, H., Hui, W., \& Shuo, W. (2008). Using expert's knowledge to build Bayesian networks. In \emph{International conference on computational intelligence and security workshops} (pp. 220--223). IEEE. \url{https://doi.org/10.1109/cisw.2007.4425484}
+
+\leavevmode\hypertarget{ref-R-knitr}{}%
+Xie, Y. (2015). \emph{Dynamic documents with R and knitr} (2nd ed.). Boca Raton, Florida: Chapman; Hall/CRC. Retrieved from \url{https://yihui.name/knitr/}
+
+\leavevmode\hypertarget{ref-Xu2015}{}%
+Xu, J. G., Zhao, Y., Chen, J., \& Han, C. (2015). A structure learning algorithm for Bayesian network using prior knowledge. \emph{Journal of Computer Science and Technology}, \emph{30}(4), 713--724. \url{https://doi.org/10.1007/s11390-015-1556-8}
+
+\leavevmode\hypertarget{ref-Yaggie2006}{}%
+Yaggie, J. A., \& Campbell, B. M. (2006). Effects of balance training on selected skills. \emph{Journal of Strength and Conditioning Research}, \emph{20}(2), 422--428. \url{https://doi.org/10.1519/R-17294.1}
+
+\leavevmode\hypertarget{ref-Yang2012}{}%
+Yang, J., Tibbetts, A. S., Covassin, T., Cheng, G., Nayar, S., \& Heiden, E. (2012). Epidemiology of overuse and acute injuries among competitive collegiate athletes. \emph{Journal of Athletic Training}, \emph{47}(2), 198--204. \url{https://doi.org/10.4085/1062-6050-47.2.198}
+
+\leavevmode\hypertarget{ref-Yaribeygi2017}{}%
+Yaribeygi, H., Panahi, Y., Sahraei, H., Johnston, T. P., \& Sahebkar, A. (2017). The impact of stress on body function: A review. \emph{EXCLI Journal}, \emph{16}, 1057--1072. \url{https://doi.org/10.17179/excli2017-480}
+
+\leavevmode\hypertarget{ref-Young2019}{}%
+Young, T. (2019). \emph{Validation of the revised Reinforcement Sensitivity Theory - Personality Questionnaire (RST-PQ).} (PhD thesis). University of South Wales.
+
+\leavevmode\hypertarget{ref-R-kableExtra}{}%
+Zhu, H. (2019). \emph{KableExtra: Construct complex table with 'kable' and pipe syntax}. Retrieved from \url{https://CRAN.R-project.org/package=kableExtra}
+
 \thispagestyle{empty}\clearpage
 
-R (Version 3.6.1; R Core Team, 2019b) and the R-packages \emph{BiocGenerics} (Version 0.30.0; Huber et al., 2015), \emph{bnlearn} (Version 4.4.1; Scutari, 2017, 2010), \emph{brms} (Version 2.9.0; Bürkner, 2017, 2018), \emph{broom} (Version 0.5.2; Robinson \& Hayes, 2019; Bolker \& Robinson, 2019), \emph{broom.mixed} (Version 0.2.4; Bolker \& Robinson, 2019), \emph{DiagrammeR} (Version 1.0.1; Iannone, 2019), \emph{dplyr} (Version 0.8.3; Wickham et al., 2019), \emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{ggplot2} (Version 3.2.1; Wickham, 2016), \emph{graph} (Version 1.62.0; Gentleman, Whalen, Huber, \& Falcon, 2019; Hansen et al., 2019), \emph{kableExtra} (Version 1.1.0; Zhu, 2019), \emph{knitr} (Version 1.25; Xie, 2015), \emph{latex2exp} (Version 0.4.0; Meschiari, 2015), \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{patchwork} (Version 0.0.1; Pedersen, 2017), \emph{purrr} (Version 0.3.2; Henry \& Wickham, 2019), \emph{qwraps2} (Version 0.4.1; DeWitt, 2019), \emph{Rcpp} (Version 1.0.2; Eddelbuettel \& François, 2011; Eddelbuettel \& Balamuta, 2017), \emph{readr} (Version 1.3.1; Wickham, Hester, \& Francois, 2018), \emph{Rgraphviz} (Version 2.28.0; Hansen et al., 2019), \emph{sjmisc} (Version 2.8.1; Lüdecke, 2018), \emph{stringr} (Version 1.4.0; Wickham, 2019b), \emph{tibble} (Version 2.1.3; Müller \& Wickham, 2019), \emph{tidyr} (Version 0.8.3; Wickham \& Henry, 2019), and \emph{tidyverse} (Version 1.2.1; Wickham, 2017)
+R (Version 3.6.2; R Core Team, 2019b) and the R-packages \emph{BiocGenerics} (Version 0.30.0; Huber et al., 2015), \emph{bnlearn} (Version 4.5; Scutari, 2017, 2010), \emph{brms} (Version 2.10.0; Bürkner, 2017, 2018), \emph{broom} (Version 0.5.3.9000; Robinson \& Hayes, 2019; Bolker \& Robinson, 2019), \emph{broom.mixed} (Version 0.2.4; Bolker \& Robinson, 2019), \emph{DiagrammeR} (Version 1.0.1; Iannone, 2019), \emph{dplyr} (Version 0.8.3; Wickham et al., 2019), \emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{ggplot2} (Version 3.2.1; Wickham, 2016), \emph{graph} (Version 1.62.0; Gentleman, Whalen, Huber, \& Falcon, 2019; Hansen et al., 2019), \emph{kableExtra} (Version 1.1.0; Zhu, 2019), \emph{knitr} (Version 1.26; Xie, 2015), \emph{latex2exp} (Version 0.4.0; Meschiari, 2015), \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{patchwork} (Version 1.0.0; Pedersen, 2017), \emph{purrr} (Version 0.3.3; Henry \& Wickham, 2019), \emph{qwraps2} (Version 0.4.2; DeWitt, 2019), \emph{Rcpp} (Version 1.0.3; Eddelbuettel \& François, 2011; Eddelbuettel \& Balamuta, 2017), \emph{readr} (Version 1.3.1; Wickham, Hester, \& Francois, 2018), \emph{Rgraphviz} (Version 2.28.0; Hansen et al., 2019), \emph{sjmisc} (Version 2.8.2; Lüdecke, 2018), \emph{stringr} (Version 1.4.0; Wickham, 2019b), \emph{tibble} (Version 2.1.3; Müller \& Wickham, 2019), \emph{tidyr} (Version 1.0.0; Wickham \& Henry, 2019), and \emph{tidyverse} (Version 1.3.0; Wickham, 2017)
 
 \newpage
 
@@ -4500,6 +5440,5 @@ Total time = 2:00
 \addcontentsline{toc}{section}{Appendix G Salemetrics cortisol assay procedure}
 
 \includepdf[pages={9-11},nup=1,pagecommand={}]{appendicies/saliva.pdf}
-
 
 \end{document}

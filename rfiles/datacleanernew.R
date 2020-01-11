@@ -5,7 +5,7 @@ library(tidyverse)
 library(lubridate)
 
 d <- read_excel("data/rawdata.xlsx",
-                sheet = "alldata (2)", 
+                sheet = "Sheet1", 
                 col_names = TRUE, 
                 n_max = 1410,
                 na = c("-", "NA"))
@@ -761,4 +761,4 @@ dinj <- dinj %>%
 #         acu_over, contact_non, still, bodypart)
 #
 
-
+save(d, dinj, file = "datavars/cleandata.rds")

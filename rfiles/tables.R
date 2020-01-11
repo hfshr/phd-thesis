@@ -1,9 +1,12 @@
-source("rfiles/datacleanernew.R")
+
 library(tidyverse)
 library(papaja)
 library(qwraps2)
 library(knitr)
 library(kableExtra)
+
+load(file = "datavars/cleandata.rds")
+d <- read_csv("data/new_cleandata.csv")
 
 students <- data.frame(stringsAsFactors=FALSE,
           id = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
@@ -128,6 +131,8 @@ apa_table(npars,
 
 ## second study participants
 
+dinj <- read_csv("data/new_cleandata_inj.csv")
+
 age <- parchar %>% 
   select(id, age)
 ids <- read_csv("data/fulldatajoined.csv") %>% 
@@ -176,7 +181,7 @@ parchar2 <- parchar2[c(1,3,8,4,2,5,7,6),]
 print(parchar2)
 
 # Number of participant in study
-parnumbers <- dinj %>% 
+parnumbers <- ding %>% 
   mutate(time = factor(time)) %>% 
   filter(variable != 2) %>% 
   group_by(time) %>% 

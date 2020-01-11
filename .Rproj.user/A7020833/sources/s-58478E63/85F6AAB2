@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1578236917909.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "85F6AAB2",
+    "lastKnownWriteTime" : 1578217790,
+    "last_content_update" : 1578217790,
+    "path" : "~/R/phd-thesis/03-measures.Rmd",
+    "project_path" : "03-measures.Rmd",
+    "properties" : {
+        "cursorPosition" : "565,0",
+        "docOutlineVisible" : "1",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

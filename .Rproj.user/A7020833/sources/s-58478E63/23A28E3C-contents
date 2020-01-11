@@ -1,0 +1,613 @@
+---
+title             :  ""
+shorttitle        :  ""
+
+author: 
+  - name          : ""
+    affiliation   : ""
+
+affiliation:
+  - id            : ""
+    institution   : ""
+
+bibliography      : [library.bib, packages.bib, r-references.bib]
+nocite: |
+  @Corr2016c, @Corr2016b, @VanMechelen1992, @Depaoli2017
+  
+      
+keywords          : ~
+wordcount         : ~
+
+floatsintext      : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : no
+mask              : no
+draft             : no
+biblio-style      : "apa"
+
+documentclass     : "apa6"
+classoption       : "man"
+output:
+   papaja::apa6_pdf:
+     latex_engine: xelatex
+   
+header-includes:
+ - \usepackage[none]{hyphenat}
+ - \raggedbottom
+ - \usepackage{setspace}
+ - \AtBeginEnvironment{tabular}{\onehalfspacing}
+ - \AtBeginEnvironment{lltable}{\onehalfspacing}
+ - \captionsetup[table]{font={stretch=1}}
+ - \captionsetup[figure]{font={stretch=1}}
+ - \setlength{\skip\footins}{1cm}
+ - \setlength{\footnotesep}{0.5cm}
+ - \usepackage{pdflscape}
+ - \newcommand{\blandscape}{\begin{landscape}}
+ - \newcommand{\elandscape}{\end{landscape}}
+ - \shorttitle{}
+ - \usepackage{graphicx}
+ - \usepackage{pdfpages}
+ - \usepackage[toc,page,header]{appendix}
+ - \usepackage{siunitx}
+ - \usepackage{enumitem}
+---
+
+\clearpage\mbox{}\thispagestyle{empty}\clearpage
+\setcounter{page}{1}
+
+\thispagestyle{empty}
+    \begin{center}
+        \vspace*{0.5cm}
+ 
+        \Large
+        \textbf{An interdisciplinary examination of stress and injury occurence in athletes.}
+ 
+        \vspace{0.3cm}
+        \large
+        
+        by
+ 
+        \vspace{0.3cm}
+        \Large
+        \textbf{Harry Fisher, BSc, MSc}
+ 
+        \vspace{0.3cm}
+ 
+        A thesis presented for the degree of Doctor of Philosophy\\
+        Cardiff Metropolitan University\\
+        August 2019\\
+        
+        \vspace{1cm}
+                
+        \begin{tabular}{ll}
+         \textbf{Director of studies:} & Dr Marianne Gittoes\\
+         \textbf{Supervisors:} & Professor Lynne Evans\\
+         & Professor Richard Mullen\\
+         \end{tabular}
+        
+        \vspace{1cm}
+                                  
+        \includegraphics[width=0.3\textwidth]{figs/cardiffmetlogo}
+ 
+\end{center}
+
+\clearpage
+
+\setcounter{page}{1}
+\pagenumbering{Roman}
+
+\includepdf[pages={1},nup=1,pagecommand={}]{appendicies/dec.pdf}
+
+\clearpage
+
+\begin{center}
+\textbf{Abstract}
+\end{center}
+
+\bigskip
+\setstretch{1.5}
+This thesis examined the multifaceted relationship between stress and sports injury. 
+Study 1 explored the relationships between psychological sources of stress (major life events and personality characteristics) and stress-related physiological markers (heart rate variability, muscle stiffness and postural control) using a prospective, repeated measures design. 
+Two Bayesian networks were used to perform the analysis and provided probabilistic statements regarding the effect of different combinations of variables in the network on injury occurrence. 
+Variables in the network were first binarised using a median split procedure to create "High" and "Low" categories within each variable. 
+The first network revealed that "High" levels of muscle stiffness resulted in the greatest probability of injury (Pr = 0.31). 
+However, there was no meaningful difference between "Low" and "High" levels of negative life events on the probability of sustaining an injury ("Low" Pr = 0.24, "High" Pr = 0.26), despite a large body of research finding evidence to the contrary. 
+The second network explicitly modelled changes between time points and found that the combination of _increases_ in muscle stiffness and negative life events resulted in the greatest probability of sustaining an injury (Pr = 0.71).
+Study 2 addressed a number of research questions that built on those of Study 1, including; whether additional measures such as the stress hormone cortisol was associated with major life events and injury; whether an alternative method of scoring major life events would be related to injury; and how these variables related to both injury occurrence and severity. 
+A subsample from the first study of male football and male rugby players were recruited for the study.
+Both Bayesian hurdle regression and Bayesian linear regression models were used to analyse the data. 
+Findings revealed that higher levels of both average negative life event score and muscle stiffness increased the probability of injury occurrence and the number of days lost due to injury, although large credible intervals were present. 
+The relationship between cortisol and injury was less clear, with each of the two teams involved in the study demonstrating a different response (football, estimate = 0.10, 95% CrI = [-0.43, 0.62]; rugby, estimate = 0.54, 95% CrI = [0.05, 1.05]). 
+The thesis concludes with a discussion of conceptual and theoretical issues, practical implications, strengths and limitations, and directions for future research.
+
+\clearpage\mbox{}\thispagestyle{empty}
+
+\begin{center}
+\textbf{Acknowledgements}
+\end{center}
+
+I would firstly like to thank Dr Marianne Gittoes, Professor Lynne Evans and Professor Richard Mullen for their continued support and guidance throughout the completion of this thesis. You have been a fantastic team to work with and have pushed me further than I thought would be possible. 
+
+I would also like to thank my close family; Mum and Dad, your unwaivering support in whatever I do means so much. David, thank you for being there to listen to all my complaints; and Mary, keep up your excellent job of always keeping Mum and Dad on their toes!
+
+A special thank you to my girlfriend Leah, who for too many reasons to list kept me sane throughout the PhD (although she may debate that sanity...).
+
+Finally, I'd like to thank all the staff and fellow Ph.D. candidates at the Cardiff School of Sport and Health Sciences for being so forthcoming with their time and ideas, and also the participants who made the thesis possible. 
+
+
+\clearpage
+
+\begin{flushleft}
+{\setstretch{1.0}
+\tableofcontents
+}
+\end{flushleft}
+
+\clearpage
+
+\begin{flushleft}
+{\setstretch{1.0}
+\listoftables
+}
+\end{flushleft}
+
+\clearpage
+
+\begin{flushleft}
+{\setstretch{1.0}
+\listoffigures
+}
+\end{flushleft}
+
+\clearpage
+
+\begin{center}
+\textbf{List of acronyms}
+\end{center}
+
+\newlist{abbrv}{itemize}{1}
+\setlist[abbrv,1]{label=,labelwidth=1in,align=parleft,itemsep=0.1\baselineskip,leftmargin=!}
+ 
+\begin{abbrv}
+ 
+\item[BAS] Behavioural Activation System
+\item[BIS] Behavioural Inhibition System
+\item[BMSAIH] Biopsychosocial Model of Stress, Athletic Injury and Health
+\item[CPQ] Conditional Probability Query
+\item[CrI] Credible Interval
+\item[FFFS] Fight-Flight-Freeze System
+\item[HRV] Heart Rate Variability
+\item[LESCA] Life Event Survery for Collegiate Athletes
+\item[NLE] Negative Life Events
+\item[RMSSD] Root Mean Square Successive Difference
+\item[RST] Reinforcement Sensitivity Theory 
+ 
+\end{abbrv}
+
+\clearpage
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\vspace*{3cm}
+
+\section[Chapter 1: Introduction]{\Large{Chapter 1: \\ Introduction}}
+
+\clearpage
+
+```{r child="01-intro.Rmd"}
+```
+
+\clearpage
+
+\vspace*{3cm}
+
+\section[Chapter 2: Literature review]{\Large{Chapter 2: \\ Literature Review}}
+
+
+\clearpage
+
+```{r child="02-litreview.Rmd"}
+```
+\clearpage
+
+\vspace*{3cm}
+
+\section[Chapter 3: Measures]{\Large{Chapter 3: \\ Measures}}
+
+\clearpage
+```{r child="03-measures.Rmd"}
+```
+\clearpage
+
+\vspace*{3cm}
+
+\section[Chapter 4: Study 1]{\Large{Chapter 4: \\ Study 1}}
+
+\clearpage
+```{r child="04-thestudy.Rmd", message=FALSE, warning=FALSE}
+```
+\clearpage
+
+\vspace*{3cm}
+
+\section[Chapter 5: Study 2]{\Large{Chapter 5: \\ Study 2}}
+
+\clearpage
+```{r child="05-study2.Rmd"}
+```
+\clearpage
+
+\vspace*{3cm}
+
+\section[Chapter 6: General discussion and conclusions]{\Large{Chapter 6: \\ General Discussion and Conclusions}}
+
+\clearpage
+```{r child="06-discussion.Rmd"}
+```
+
+\clearpage
+
+```{r create_r-references}
+r_refs(file = "r-references.bib")
+
+my_citations <- cite_r(file = "r-references.bib")
+
+```
+
+\clearpage
+
+# References 
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+<div id="refs"></div>
+
+
+\thispagestyle{empty}\clearpage
+
+`r my_citations`
+
+\newpage
+
+\appendix
+
+\section{Life Event Survey for Collegiate Athletes}
+\addcontentsline{toc}{section}{Appendix A Life Event Survey for Collegiate Athletes}
+
+\includepdf[pages={3-13},nup=1,pagecommand={}]{appendicies/datacollection1.pdf}
+
+\section{Reinforcement Sensitivity Theory Personality Questionnaire}
+\addcontentsline{toc}{section}{Appendix B  Reinforcement Sensitivity Theory Personality Questionnaire}
+
+\includepdf[pages={14-19},nup=1,pagecommand={}]{appendicies/datacollection1.pdf}
+
+\addcontentsline{toc}{section}{Appendix C  HRV analysis script}
+\section{HRV analysis script}
+
+\setstretch{1.0}
+
+```{r hrappen, eval=FALSE, echo=TRUE}
+
+setwd("/Users/HarryFisher/Downloads/ProjectR/phdthesis/data/hrv/complete/")
+path <- "~/Downloads/ProjectR/phdthesis/data/hrv/complete/"
+file.names <- dir(path, pattern = ".txt")
+
+out.file <- "" # empty file for results
+# setting loop to go through files
+for (i in 1:length(file.names)) {
+  rrTable <- read.table(file.names[i],
+    sep = "",
+    dec = ".",
+    stringsAsFactors = FALSE
+  )
+
+  colnames(rrTable) <- c("time", "rr")
+
+  # create HRV data analysis
+  hrv.data <- CreateHRVData() %>%
+    SetVerbose(FALSE) %>%
+    LoadBeatVector(rrTable$time) %>%
+    BuildNIHR()
+  new.hrv <- Window(hrv.data, 180, 480) # extract 5 min segment
+  originalbeat <- length(new.hrv$Beat$niHR)
+  # adaptive threshold filter
+  new.hrv <- FilterNIHR(new.hrv, long = 20, minbpm = 20, maxbpm = 140)
+  acceptedbeat <- length(new.hrv$Beat$niHR)
+
+  # time analysis not used in results
+  new.hrv <- CreateTimeAnalysis(new.hrv, size = 60, interval = 7.8125) %>%
+    # interpolate at 4hz using spline method
+    InterpolateNIHR(method = "spline") %>%
+    CreateFreqAnalysis() %>%
+    CalculatePowerBand(indexFreqAnalysis = 1, size = 256, shift = 10) %>%
+    # STFT
+    CreateFreqAnalysis() %>%
+    # FFT analysis
+    CalculatePSD(1,
+      method = "pgram", ULFmin = NULL, detrend = T,
+      doPlot = FALSE
+    )
+
+  # collect results
+  results <- tibble(
+    id = as.numeric(data.frame(str_sub(file.names[i],
+      start = 1,
+      end = 3
+    ),
+    stringsAsFactors = F
+    )),
+    time = as.numeric(data.frame(str_sub(file.names[i],
+      start = 6,
+      end = 6
+    ),
+    stringsAsFactors = FALSE
+    )),
+    meanHR = mean(new.hrv[["Beat"]][["niHR"]]),
+    # time doamin measures
+    sdnn = new.hrv[["TimeAnalysis"]][[1]][["SDNN"]],
+    rmssd = new.hrv[["TimeAnalysis"]][[1]][["rMSSD"]],
+    HFmean = mean(new.hrv[["FreqAnalysis"]][[1]][["HF"]]),
+    # STFT
+    artifacts = (originalbeat - acceptedbeat) / originalbeat * 100
+    # % of artifacts
+  )
+  out.file <- rbind.data.frame(out.file, results) ## tidying up
+  out.file <- lapply(out.file, as.numeric) %>%
+    data.frame() %>%
+    drop_na() %>%
+    round(digits = 2)
+  rownames(out.file) <- seq(length = nrow(out.file))
+}
+
+write_csv(out.file, "~/Downloads/ProjectR/phdthesis/data/hrv/hrvdata.csv")
+
+```
+
+# Additional tables from Study 1
+
+\addcontentsline{toc}{section}{Appendix D Additional tables from Study 1}
+
+```{r cutoffvalues, results='asis'}
+load("datavars/tempnetworks.rds")
+
+varcutoffs %>%
+  kable("latex",
+       booktabs = T,
+       linesep = "",
+       align = c("clcc"),
+       caption = "All variables included in the initial network structure.",
+       col.names = c("Variable", "Definition", "State 1", "State 2"),
+       longtable = T) %>%
+   kable_styling(latex_options = "HOLD_position") %>%
+   column_spec(2, width = c("5cm"))
+
+```
+
+```{r results='asis'}
+str %>%
+  filter(strength > 0.299 & direction != 0) %>%
+  arrange(-strength) %>%
+  apa_table(caption = "All arc strengths greater than 0.3 included in the network.",
+            placement = "H",
+            longtable = T)
+```
+
+```{r results='asis'}
+newprobtable(tallc,
+                       c("balance_1", "stiffness_1", "nlelg_1", "hours"),
+                       "injured_1",
+                       "injured",
+                       avg30
+) %>%
+  arrange(-prob) %>%
+  select(outcome, everything()) %>%
+  dendroTools::round_df(2) %>%
+  select(6,2:5) %>%
+  apa_table(placement = "H",
+            caption = "Probabilities of injury conditional on the variables in the Markov blanket for injured_1.")
+
+```
+
+```{r results='asis'}
+newprobtable(tallc,
+                       c("balance_2", "stiffness_2", "nlelg_2", "FFFS_1", "rmssd_2"),
+                       "injured_2",
+                       "injured",
+                       avg30
+) %>%
+  arrange(-prob) %>%
+  select(outcome, everything()) %>%
+  dendroTools::round_df(2) %>%
+  select(7, 2:6) %>%
+  apa_table(placement = "H",
+            caption = "Probabilities of injury conditional on the variables in the Markov blanket for injured_2.")
+
+
+```
+
+# High intensity training session 
+\addcontentsline{toc}{section}{Appendix E Training sessions in Study 2}
+
+\begin{flushleft}
+
+\begin{center}
+
+  \textbf{Rugby}
+  
+\end{center}
+
+  \textbf{Session 1 (pre season conditioning)}
+
+Total time = 55mins
+
+Warmup / rehab drills 15 mins (light jogging, strectching, mobility)
+
+3 work stations:
+
+- Bike - 10 seconds flat out sprint
+- Row machine travel 100m fast
+- Ski travel 100m fast
+
+- 60 seconds to complete distance / time and move to next station, repeat each station three times in a set (two sets in total).
+
+- 2 minutes recovery between rounds in a set.
+
+- 10 minutes between sets.
+
+- Double distance on second set (20 sec bike, 200m row and ski).
+
+
+  \textbf{Session 2}
+
+Total time = 1:30
+
+warm up 15 mins / jogging / passing
+
+Core skills roations 3 x 6 mins
+
+  - Handling 
+  - Contact - tackle bags scrum etc
+  - Defense blitz
+  
+Team attack and defence 12min each (high intensity) - practicing skills from previous section
+
+Match play 15 minutes (high intensity)
+
+
+  \textbf{Session 3}
+
+Repeat of session 2
+
+\clearpage
+
+\begin{center}
+
+  \textbf{Football}
+  
+\end{center}
+
+\textbf{Session 1}
+
+Total time = 1:55
+
+- Strength and conditioning and warm-up: 25mins
+
+- Technical passing drill 20 minutes (5 x 4 minute blocks)
+
+- Strength and conditioning exercises (10mins)
+
+- Possession based activity multi-directional activity. 4 teams, 2 resting, 2 works (30mins, 4 minute blocks)
+
+- 7 vs 7 small sided game
+
+- High intensity sprints – 30 seconds each
+
+\textbf{Session 2}
+
+Total time = 1:45
+
+- Warm up 25 mins
+
+- Technique – passing drills 30s x 6 reps cone – cone
+
+- 1v1 / 2v2 possession games - Groups of 6 2 min rotations
+
+- 3v3 possesion + overload 2 x 2 mins
+
+- 2 touch / 1 touch game
+
+- 2 minute games (high intensity)
+
+
+\textbf{Session 2}
+
+Total time = 2:00
+
+- Warm up combined with rondos (15-20 minutes). 3 rounds which are progressively more intense.
+
+- A circuit of 3 passing drills (repeated twice, 15mins)
+
+- Possession based exercise with three teams (repeated twice, 20mins)
+
+- 6 box-to-box runs
+
+- 11 vs 11 practice match – frequently intervened by the coaches (25/30mins)
+
+\end{flushleft}
+
+\section{Bayesian analysis in Study 2}
+
+\addcontentsline{toc}{section}{Appendix F Code for Bayesian analysis in Study 2}
+
+
+```{r study2appen, eval=FALSE, echo=TRUE}
+# data available at: 
+# https://github.com/HarryFisher1/phd-thesis
+sem <- read_csv("data/study2_cleandata.csv") 
+
+## First model
+
+options(mc.cores = parallel::detectCores())
+
+prior1 <- c(
+  set_prior("normal(0, 10)", class = "Intercept"),
+  set_prior("normal(0,2.5)", class = "b"),
+  set_prior("cauchy(0,1)", class = "sd")
+)
+
+fit1 <- brm(
+  bf(
+    days_missed ~ negsev_z + delta_new_z:sportg + stiffness_z + (1 | id),
+    hu ~ negsev_z + delta_new_z:sportg + stiffness_z + (1 | id)
+  ),
+  prior = prior1,
+  data = sem,
+  family = hurdle_negbinomial(),
+  control = list(adapt_delta = 0.99)
+)
+
+## Summary
+summary(fit1)
+
+## Clean table
+tidy_stan(fit1)
+
+## Interactive model checks
+launch_shinystan(fit1)
+
+x <- marginal_effects(fit1, dpar = "hu", probs = c(0.2, 0.8))
+y <- marginal_effects(fit1, probs = c(0.2, 0.8))
+
+## Second model
+
+bf1 <- bf(delta_new_z ~ negsev_z + stiffness_z + (1 | ID | id))
+bf2 <- bf(stiffness_z ~ negsev_z + (1 | ID | id))
+
+prior2 <- c(
+  set_prior("normal(0, 10)", class = "Intercept"),
+  set_prior("normal(0,2.5)", class = "b")
+)
+
+fullmod <- bf1 + bf2 + set_rescor(FALSE)
+
+fmod <- brm(
+  fullmod,
+  data = sem,
+  control = list(adapt_delta = 0.99),
+  iter = 3000,
+  prior = prior2
+)
+
+# Posterior predictive check
+pp <- pp_check(fmod, resp = "stiffnessz", nsamples = 100)
+pp
+```
+
+
+# Salemetrics cortisol assay procedure
+\addcontentsline{toc}{section}{Appendix G Salemetrics cortisol assay procedure}
+
+\includepdf[pages={9-11},nup=1,pagecommand={}]{appendicies/saliva.pdf}
